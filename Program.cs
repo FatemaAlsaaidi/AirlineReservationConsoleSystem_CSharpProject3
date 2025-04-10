@@ -1,7 +1,7 @@
 ﻿namespace AirlineReservationConsoleSystem_CSharpProject3
 {
     internal class Program
-    {
+    {   // Declare variables and arraies we need them 
         static int Max_Flight = 3;
         static int FlightCounter = 0;
         static string[] flightCode_A = new string[Max_Flight];
@@ -18,12 +18,13 @@
         }
         public static int ShowMainMenu()
         {
-            Console.WriteLine("Enter the option: ");
+            Console.WriteLine("Airline Reservation System");
             Console.WriteLine("1. Add Flight");
             Console.WriteLine("2. Display All Flights");
             Console.WriteLine("3. Find Flight By Code");
             Console.WriteLine("4. Update Flight Departure");
             Console.WriteLine("5. Cancel Flight Booking");
+            Console.WriteLine("Enter the option: ");
 
             int option = int.Parse(Console.ReadLine());
             return option;
@@ -31,12 +32,25 @@
 
         public static void AddFlight(string flightCode, string fromCity, string toCity, DateTime departureTime, int duration)
         {
-            flightCode_A[FlightCounter] = flightCode;
-            fromCity_A[FlightCounter] = fromCity;
-            toCity_A[FlightCounter] = toCity;
-            departureTime_A[FlightCounter] = departureTime;
-            duration_A[FlightCounter] = duration;
-            AvailableFlights[FlightCounter] = true;
+            while (FlightCounter < Max_Flight)
+            {
+
+
+                if (FlightCounter < Max_Flight)
+                {
+                    flightCode_A[FlightCounter] = flightCode;
+                    fromCity_A[FlightCounter] = fromCity;
+                    toCity_A[FlightCounter] = toCity;
+                    departureTime_A[FlightCounter] = departureTime;
+                    duration_A[FlightCounter] = duration;
+                    AvailableFlights[FlightCounter] = true;
+                }
+                else
+                {
+                    Console.WriteLine("Can not add more");
+                }
+            }
+
         }
         static void Main(string[] args)
         {
@@ -46,21 +60,25 @@
             switch (ShowMainMenu())
             {
                 case 1:
-                    Console.WriteLine("Enter Flight Code :");
-                    string flight_Code = Console.ReadLine();
+                    while (FlightCounter < Max_Flight)
+                    {
+                        Console.WriteLine("Enter Flight Code :");
+                        string flight_Code = Console.ReadLine();
 
-                    Console.WriteLine("Enter From City :");
-                    string from_City = Console.ReadLine();
+                        Console.WriteLine("Enter From City :");
+                        string from_City = Console.ReadLine();
 
-                    Console.WriteLine("Enter To City :");
-                    string to_City = Console.ReadLine();
+                        Console.WriteLine("Enter To City :");
+                        string to_City = Console.ReadLine();
 
-                    DateTime departure_Time = DateTime.Now;
+                        DateTime departure_Time = DateTime.Now;
 
-                    Console.WriteLine("Enter duration:");
-                    int duration_1 = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Enter duration:");
+                        int duration_1 = int.Parse(Console.ReadLine());
 
-                    AddFlight(flightCode: flight_Code, fromCity : from_City, toCity: to_City, departureTime: departure_Time, duration: duration_1);
+                        AddFlight(flightCode: flight_Code, fromCity: from_City, toCity: to_City, departureTime: departure_Time, duration: duration_1);
+                    }
+                    FlightCounter++;
 
                     break;
                 case 2:
@@ -75,6 +93,10 @@
                 case 5:
 
                     break;
+
+                default: 
+                    Console.WriteLine("Invalid choice! Try again."); 
+                break;
             }
         }
     }
