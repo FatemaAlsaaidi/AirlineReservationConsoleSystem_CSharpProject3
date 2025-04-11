@@ -66,8 +66,8 @@
             // Wait for user to press any key before continuing
             Console.ReadLine();
 
-            
-            while (true) 
+            // use while to repate the ShowMainMenu() to show the menu in every one of the feature in the menu break; 
+            while (true)
             {
                 int option = ShowMainMenu();
 
@@ -81,21 +81,25 @@
                 char ChoiceChar = 'y';
                 bool AddMore = true;
                 bool isValid = true;
-                
+
                 switch (option)
                 {
                     case 1:
                         while (AddMore && FlightCounter < Max_Flight)
                         {
+
                             Console.WriteLine($"Enter flight {FlightCounter + 1} Information");
 
                             // Flight Code Input..
+                            // use do while loop to excute the quations of input data for first time befor check the input data if it is valide or no .
                             do
                             {
+                                // ask user to input Flight Code data and store this data in flight_Code variable 
                                 Console.WriteLine("Enter Flight Code :");
                                 flight_Code = Console.ReadLine();
 
                                 // flightCode input validation 
+                                // check if the input flight code is not null and display the message to the user to enter the valid valis code input
                                 if (string.IsNullOrWhiteSpace(flight_Code))
                                 {
                                     Console.WriteLine("Flight code cannot be empty.");
@@ -121,12 +125,13 @@
 
                                 }
 
-                            } while (!isValid);
+                            } while (!isValid); // if the input is not vlidate repet ask the user 
 
                             // From City Input
+                            // use do while loop to excute the quations of input data for first time befor check the input data if it is valide or no .
                             do
                             {
-
+                                //Ask user to input the from city data and temprorly store this data in from_city data
                                 Console.WriteLine("Enter From City :");
                                 from_City = Console.ReadLine();
 
@@ -141,10 +146,10 @@
                                 {
                                     isValid = true;
                                 }
-                            } while (!isValid);
+                            } while (!isValid); // if the input is not vlidate repet ask the user 
 
                             // To City Input
-
+                            // use do while loop to excute the quations of input data for first time befor check the input data if it is valide or no .
                             do
                             {
                                 Console.WriteLine("Enter To City :");
@@ -161,9 +166,10 @@
                                     isValid = true;
                                 }
 
-                            } while (!isValid);
+                            } while (!isValid); // if the input is not vlidate repet ask the user 
 
                             // Departure time input
+                            // use do while loop to excute the quations of input data for first time befor check the input data if it is valide or no .
                             do
                             {
                                 Console.WriteLine("Enter the departure time (e.g., 2025-04-12 14:30):");
@@ -179,9 +185,10 @@
                                     isValid = false;
                                 }
 
-                            } while (!isValid);
+                            } while (!isValid); // if the input is not vlidate repet ask the user 
 
                             // Duration Input
+                            // use do while loop to excute the quations of input data for first time befor check the input data if it is valide or no .
                             do
                             {
                                 Console.WriteLine("Enter duration:");
@@ -205,10 +212,11 @@
                                     Console.WriteLine("Invalid input. Please enter a valid number.");
                                     isValid = false;
                                 }
-                            } while (!isValid);
+                            } while (!isValid); // if the input is not vlidate repet ask the user 
 
 
                             // Number of seats input
+                            // use do while loop to excute the quations of input data for first time befor check the input data if it is valide or no .
                             do
                             {
                                 Console.WriteLine("Enter the Number of seats:");
@@ -224,12 +232,15 @@
                                     isValid = true;
                                 }
 
-                            } while (!isValid);
+                            } while (!isValid); // if the input is not vlidate repet ask the user 
 
+                            // check is all inputs data is valid or not 
                             if (isValid)
                             {
+                                // store all inputs data in the array 
                                 AddFlight(flightCode: flight_Code, fromCity: from_City, toCity: to_City, departureTime: departure_Time, duration: duration_1, SeatsNum: Seats_Num);
                                 Console.WriteLine("Flight added successfully!");
+                                FlightCounter++;
                             }
                             else
                             {
@@ -237,30 +248,31 @@
                                 break;
 
                             }
-
-                            FlightCounter++;
+                            //ask user if want to add more flight information 
                             Console.WriteLine("Do you want to add more flight information?! (y/n)");
                             ChoiceChar = Console.ReadKey().KeyChar;
                             Console.WriteLine();
-                            Console.ReadLine();
+                            // use if statement to deal with ChoiceChar input if y or n
                             if (ChoiceChar == 'Y' || ChoiceChar == 'y')
                             {
+                                // use if instead to check also if FlightCounter is equal or not the Max_Flight
                                 if (FlightCounter == Max_Flight)
                                 {
                                     Console.WriteLine("Can Not Add More Flight Information");
-                                    AddMore = false;
+                                    AddMore = false; 
                                 }
                                 else
                                 {
-                                    AddMore = true;
+                                    AddMore = true; // display AddMore as true if FlightCounter does not equal Max_Flight and it is aable to add more flight information.
                                 }
                             }
                             else
                             {
-                                AddMore = false;
+                                AddMore = false; // display AddMore as false is user do not add more flight information 
                             }
+                            Console.ReadLine();
                         }
-
+                        
                         break;
 
                     case 2:
