@@ -22,6 +22,9 @@
         // 2. show main menu method
         public static int ShowMainMenu()
         {
+            // Just to clear the screen
+            Console.Clear();
+            //Print the menu lists
             Console.WriteLine("Airline Reservation System");
             Console.WriteLine("1. Add Flight");
             Console.WriteLine("2. Display All Flights");
@@ -42,24 +45,58 @@
         // 4. Add Flight information method
         public static void AddFlight(string flightCode, string fromCity, string toCity, DateTime departureTime, int duration, int SeatsNum)
         {
-            while (FlightCounter < Max_Flight)
+            // flightCode input validation 
+            if (string.IsNullOrWhiteSpace(flightCode))
             {
+                Console.WriteLine("Flight code cannot be empty.");
+                return;
+            }
 
+            // fromCity input validation 
+            if (string.IsNullOrWhiteSpace(fromCity))
+            {
+                Console.WriteLine("From city names cannot be empty.");
+                return;
+            }
 
-                if (FlightCounter < Max_Flight)
+            // Duration input validation 
+            if (duration <= 0)
+            {
+                Console.WriteLine("Duration must be greater than zero.");
+                return;
+            }
+
+            //seatsNum input validation
+            if (SeatsNum <= 0)
+            {
+                Console.WriteLine("Number of seats must be greater than zero.");
+                return;
+            }
+            // Flight Counter validation 
+            if (FlightCounter >= Max_Flight)
+            {
+                Console.WriteLine("Maximum number of flights reached.");
+                return;
+            }
+
+            // (Optional) Check if flight code already exists
+            for (int i = 0; i < FlightCounter; i++)
+            {
+                if (flightCode_A[i] == flightCode)
                 {
-                    flightCode_A[FlightCounter] = flightCode;
-                    fromCity_A[FlightCounter] = fromCity;
-                    toCity_A[FlightCounter] = toCity;
-                    departureTime_A[FlightCounter] = departureTime;
-                    duration_A[FlightCounter] = duration;
-                    AvailableFlights[FlightCounter] = true;
-                }
-                else
-                {
-                    Console.WriteLine("Can not add more");
+                    Console.WriteLine("A flight with this code already exists.");
+                    return;
                 }
             }
+
+            // If all validations pass, save the data
+            flightCode_A[FlightCounter] = flightCode;
+            fromCity_A[FlightCounter] = fromCity;
+            toCity_A[FlightCounter] = toCity;
+            departureTime_A[FlightCounter] = departureTime;
+            duration_A[FlightCounter] = duration;
+            AvailableFlights[FlightCounter] = true;
+            Console.WriteLine("Flight added successfully!");
 
         }
         //                    ========================= System Utilities & Final Flow ===========================
@@ -67,13 +104,17 @@
         //  1. Start System method 
         public static void StartSystem()
         {
+            // calling DisplayWelcomeMessage() function 
             DisplayWelcomeMessage();
 
+            // Wait for user to press any key before continuing
+            Console.ReadLine();
 
+            char ChoiceChar = 'y';
             switch (ShowMainMenu())
             {
                 case 1:
-                    while (FlightCounter < Max_Flight)
+                    do
                     {
                         Console.WriteLine("Enter Flight Code :");
                         string flight_Code = Console.ReadLine();
@@ -93,10 +134,23 @@
                         int Seats_Num = int.Parse(Console.ReadLine());
 
                         AddFlight(flightCode: flight_Code, fromCity: from_City, toCity: to_City, departureTime: departure_Time, duration: duration_1, SeatsNum: Seats_Num);
-                    }
+
+                    } while (FlightCounter < Max_Flight) ;
+
                     FlightCounter++;
 
-                    break;
+                    Console.WriteLine("Do you want to add more flight information?! (y/n)");
+                    ChoiceChar = Console.ReadKey().KeyChar;
+                    if (ChoiceChar == 'Y' || ChoiceChar == 'y')
+                    {
+                        if (FlightCounter == Max_Flight)
+                            Console.WriteLine("Can Not Add More Flight Information");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Ok!");
+                    }
+                        break; 
                 case 2:
 
                     break;
@@ -111,10 +165,13 @@
                     break;
 
                 case 0:
+                    //calling ExitApplication() function
                     ExitApplication();
+                    //using return to stop the whole method thus, stop whole program 
                     return;
 
                 default:
+                    // // Display an message for invalid user input 
                     Console.WriteLine("Invalid choice! Try again.");
                     break;
             }
