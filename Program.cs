@@ -1,7 +1,7 @@
 ﻿namespace AirlineReservationConsoleSystem_CSharpProject3
 {
     internal class Program
-    {   // Declare variables and arraies we need them 
+    {   // global variables and arraies for flight ....... 
         static int Max_Flight = 3;
         static int FlightCounter = 0;
         static string[] flightCode_A = new string[Max_Flight];
@@ -9,13 +9,17 @@
         static string[] toCity_A = new string[Max_Flight];
         static DateTime[] departureTime_A = new DateTime[Max_Flight];
         static int[] duration_A = new int[Max_Flight];
-
+        static int[] SeatsNum_A = new int[Max_Flight];
         static bool[] AvailableFlights = new bool[Max_Flight];
 
+        //                                =====================Startup & Navigation=============
+
+        // 1. display welcome message method..........
         public static void DisplayWelcomeMessage()
         {
             Console.WriteLine("Welcome to Airline Reservation System");
         }
+        // 2. show main menu method
         public static int ShowMainMenu()
         {
             Console.WriteLine("Airline Reservation System");
@@ -24,13 +28,19 @@
             Console.WriteLine("3. Find Flight By Code");
             Console.WriteLine("4. Update Flight Departure");
             Console.WriteLine("5. Cancel Flight Booking");
+            Console.WriteLine("0. Exit");
             Console.WriteLine("Enter the option: ");
 
             int option = int.Parse(Console.ReadLine());
             return option;
         }
-
-        public static void AddFlight(string flightCode, string fromCity, string toCity, DateTime departureTime, int duration)
+        // 3. Exit Application method
+        public static void ExitApplication()
+        {
+            Console.WriteLine("Thanks! Have Happy Day!");
+        }
+        // 4. Add Flight information method
+        public static void AddFlight(string flightCode, string fromCity, string toCity, DateTime departureTime, int duration, int SeatsNum)
         {
             while (FlightCounter < Max_Flight)
             {
@@ -52,7 +62,10 @@
             }
 
         }
-        static void Main(string[] args)
+        //                    ========================= System Utilities & Final Flow ===========================
+
+        //  1. Start System method 
+        public static void StartSystem()
         {
             DisplayWelcomeMessage();
 
@@ -76,7 +89,10 @@
                         Console.WriteLine("Enter duration:");
                         int duration_1 = int.Parse(Console.ReadLine());
 
-                        AddFlight(flightCode: flight_Code, fromCity: from_City, toCity: to_City, departureTime: departure_Time, duration: duration_1);
+                        Console.WriteLine("Enter the Number of seats:");
+                        int Seats_Num = int.Parse(Console.ReadLine());
+
+                        AddFlight(flightCode: flight_Code, fromCity: from_City, toCity: to_City, departureTime: departure_Time, duration: duration_1, SeatsNum: Seats_Num);
                     }
                     FlightCounter++;
 
@@ -94,10 +110,22 @@
 
                     break;
 
-                default: 
-                    Console.WriteLine("Invalid choice! Try again."); 
-                break;
+                case 0:
+                    ExitApplication();
+                    return;
+
+                default:
+                    Console.WriteLine("Invalid choice! Try again.");
+                    break;
             }
+        }
+
+        //                    ======================= main method ==============================
+
+        // 1. main method 
+        static void Main(string[] args)
+        {
+            StartSystem();
         }
     }
 }
