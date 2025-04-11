@@ -66,185 +66,229 @@
             // Wait for user to press any key before continuing
             Console.ReadLine();
 
-            // Declare variables to store singe value of user input 
-            string flight_Code = null;
-            string from_City = null;
-            string to_City = null;
-            DateTime departure_Time;
-            int duration_1 = 0;
-            int Seats_Num = 0;
-            char ChoiceChar = 'y';
-            bool AddMore = true;
-            bool isValid = true;
-            switch (ShowMainMenu())
+            
+            while (true) 
             {
-                case 1:
-                    while (AddMore && FlightCounter < Max_Flight)
-                    {
-                        Console.WriteLine($"Enter flight {FlightCounter + 1} Information");
+                int option = ShowMainMenu();
 
-                        // Flight Code Input..
-                        do
+                // Declare variables to store singe value of user input 
+                string flight_Code = null;
+                string from_City = null;
+                string to_City = null;
+                DateTime departure_Time;
+                int duration_1 = 0;
+                int Seats_Num = 0;
+                char ChoiceChar = 'y';
+                bool AddMore = true;
+                bool isValid = true;
+                
+                switch (option)
+                {
+                    case 1:
+                        while (AddMore && FlightCounter < Max_Flight)
                         {
-                            Console.WriteLine("Enter Flight Code :");
-                            flight_Code = Console.ReadLine();
+                            Console.WriteLine($"Enter flight {FlightCounter + 1} Information");
 
-                            // flightCode input validation 
-                            if (string.IsNullOrWhiteSpace(flight_Code))
+                            // Flight Code Input..
+                            do
                             {
-                                Console.WriteLine("Flight code cannot be empty.");
-                                isValid = false;
-                            }
+                                Console.WriteLine("Enter Flight Code :");
+                                flight_Code = Console.ReadLine();
 
-                            // (Optional) Check if flight code already exists
-                            for (int i = 0; i < FlightCounter; i++)
-                            {
-                                if (flightCode_A[i] == flight_Code)
+                                // flightCode input validation 
+                                if (string.IsNullOrWhiteSpace(flight_Code))
                                 {
-                                    Console.WriteLine("A flight with this code already exists.");
+                                    Console.WriteLine("Flight code cannot be empty.");
                                     isValid = false;
                                 }
-                            }
-                        } while (!isValid);
+                                else
+                                {
+                                    isValid = true;
+                                }
 
-                        // From City Input
-                        do
-                        {
+                                // (Optional) Check if flight code already exists
+                                for (int i = 0; i < FlightCounter; i++)
+                                {
+                                    if (flightCode_A[i] == flight_Code)
+                                    {
+                                        Console.WriteLine("A flight with this code already exists.");
+                                        isValid = false;
+                                    }
+                                    else
+                                    {
+                                        isValid = true;
+                                    }
 
-                            Console.WriteLine("Enter From City :");
-                            from_City = Console.ReadLine();
+                                }
 
+                            } while (!isValid);
 
-                            // fromCity input validation 
-                            if (string.IsNullOrWhiteSpace(from_City))
+                            // From City Input
+                            do
                             {
-                                Console.WriteLine("From city names cannot be empty.");
-                                isValid = false;
-                            }
-                        }while(!isValid);
 
-                        // To City Input
+                                Console.WriteLine("Enter From City :");
+                                from_City = Console.ReadLine();
 
-                        do 
-                        {
-                            Console.WriteLine("Enter To City :");
-                            to_City = Console.ReadLine();
 
-                            // fromCity input validation 
-                            if (string.IsNullOrWhiteSpace(to_City))
+                                // fromCity input validation 
+                                if (string.IsNullOrWhiteSpace(from_City))
+                                {
+                                    Console.WriteLine("From city names cannot be empty.");
+                                    isValid = false;
+                                }
+                                else
+                                {
+                                    isValid = true;
+                                }
+                            } while (!isValid);
+
+                            // To City Input
+
+                            do
                             {
-                                Console.WriteLine("Trom city names cannot be empty.");
-                                isValid = false;
-                            }
+                                Console.WriteLine("Enter To City :");
+                                to_City = Console.ReadLine();
 
-                        }while (!isValid);
+                                // fromCity input validation 
+                                if (string.IsNullOrWhiteSpace(to_City))
+                                {
+                                    Console.WriteLine("Trom city names cannot be empty.");
+                                    isValid = false;
+                                }
+                                else
+                                {
+                                    isValid = true;
+                                }
 
-                        // Departure time input
-                        do 
-                        {
-                            Console.WriteLine("Enter the departure time (e.g., 2025-04-12 14:30):");
-                            string input = Console.ReadLine();
+                            } while (!isValid);
 
-                            if (DateTime.TryParse(input, out departure_Time))
+                            // Departure time input
+                            do
                             {
-                                isValid = true;
+                                Console.WriteLine("Enter the departure time (e.g., 2025-04-12 14:30):");
+                                string input = Console.ReadLine();
+
+                                if (DateTime.TryParse(input, out departure_Time))
+                                {
+                                    isValid = true;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid format! Please enter a valid date and time.");
+                                    isValid = false;
+                                }
+
+                            } while (!isValid);
+
+                            // Duration Input
+                            do
+                            {
+                                Console.WriteLine("Enter duration:");
+                                string DurationInput = Console.ReadLine();
+
+                                // Duration input validation 
+                                if (int.TryParse(DurationInput, out duration_1))
+                                {
+                                    if (duration_1 <= 0)
+                                    {
+                                        Console.WriteLine("Duration must be greater than zero.");
+                                        isValid = false;
+                                    }
+                                    else
+                                    {
+                                        isValid = true;
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid number.");
+                                    isValid = false;
+                                }
+                            } while (!isValid);
+
+
+                            // Number of seats input
+                            do
+                            {
+                                Console.WriteLine("Enter the Number of seats:");
+                                Seats_Num = int.Parse(Console.ReadLine());
+                                //seatsNum input validation
+                                if (Seats_Num <= 0)
+                                {
+                                    Console.WriteLine("Number of seats must be greater than zero.");
+                                    isValid = false;
+                                }
+                                else
+                                {
+                                    isValid = true;
+                                }
+
+                            } while (!isValid);
+
+                            if (isValid)
+                            {
+                                AddFlight(flightCode: flight_Code, fromCity: from_City, toCity: to_City, departureTime: departure_Time, duration: duration_1, SeatsNum: Seats_Num);
+                                Console.WriteLine("Flight added successfully!");
                             }
                             else
                             {
-                                Console.WriteLine("Invalid format! Please enter a valid date and time.");
-                                isValid = false;
+                                Console.WriteLine("Flight added faild!");
+                                break;
+
                             }
 
-                        } while (!isValid);
-
-                        // Duration Input
-
-                        do {
-                            Console.WriteLine("Enter duration:");
-                            duration_1 = int.Parse(Console.ReadLine());
-
-                            // Duration input validation 
-                            if (duration_1 <= 0)
+                            FlightCounter++;
+                            Console.WriteLine("Do you want to add more flight information?! (y/n)");
+                            ChoiceChar = Console.ReadKey().KeyChar;
+                            Console.WriteLine();
+                            Console.ReadLine();
+                            if (ChoiceChar == 'Y' || ChoiceChar == 'y')
                             {
-                                Console.WriteLine("Duration must be greater than zero.");
-                                isValid = false;
+                                if (FlightCounter == Max_Flight)
+                                {
+                                    Console.WriteLine("Can Not Add More Flight Information");
+                                    AddMore = false;
+                                }
+                                else
+                                {
+                                    AddMore = true;
+                                }
                             }
-                        }while (!isValid);
-
-                        // Number of seats input
-                        do
-                        {
-                            Console.WriteLine("Enter the Number of seats:");
-                            Seats_Num = int.Parse(Console.ReadLine());
-                            //seatsNum input validation
-                            if (Seats_Num <= 0)
+                            else
                             {
-                                Console.WriteLine("Number of seats must be greater than zero.");
-                                isValid = false;
-                            }
-
-                        } while (!isValid);
-                        if (isValid)
-                        {
-                            AddFlight(flightCode: flight_Code, fromCity: from_City, toCity: to_City, departureTime: departure_Time, duration: duration_1, SeatsNum: Seats_Num);
-                            Console.WriteLine("Flight added successfully!");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Flight added faild!");
-                            break;
-
-                        }
-
-                        FlightCounter++;
-                        Console.WriteLine("Do you want to add more flight information?! (y/n)");
-                        ChoiceChar = Console.ReadKey().KeyChar;
-                        Console.WriteLine();
-                        Console.ReadLine();
-                        if (ChoiceChar == 'Y' || ChoiceChar == 'y')
-                        {
-                            if (FlightCounter == Max_Flight)
-                            {
-                                Console.WriteLine("Can Not Add More Flight Information");
                                 AddMore = false;
                             }
-                            else
-                            {
-                                AddMore = true;
-                            }
                         }
-                        else
-                        {
-                            ShowMainMenu();
-                            AddMore = false;
-                        }
-                    }
-                    
-                        break; 
-                case 2:
 
-                    break;
-                case 3:
+                        break;
 
-                    break;
-                case 4:
+                    case 2:
 
-                    break;
-                case 5:
+                        break;
+                    case 3:
 
-                    break;
+                        break;
+                    case 4:
 
-                case 0:
-                    //calling ExitApplication() function
-                    ExitApplication();
-                    //using return to stop the whole method thus, stop whole program 
-                    return;
+                        break;
+                    case 5:
 
-                default:
-                    // // Display an message for invalid user input 
-                    Console.WriteLine("Invalid choice! Try again.");
-                    break;
+                        break;
+
+                    case 0:
+                        //calling ExitApplication() function
+                        ExitApplication();
+                        //using return to stop the whole method thus, stop whole program 
+                        return;
+
+                    default:
+                        // // Display an message for invalid user input 
+                        Console.WriteLine("Invalid choice! Try again.");
+                        break;
+                }
             }
+
         }
 
         //                    ======================= main method ==============================
