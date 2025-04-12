@@ -123,6 +123,29 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                 }
             }
         }
+        //6. Find Flight By Code
+        public static bool FindFlightByCode(string code)
+        {
+            for (int i = 0; i < FlightCounter; i++) 
+            { 
+                if (code == flightCode_A[i])
+                {
+                    Console.WriteLine($"Flight Code: {flightCode_A[i]}");
+                    Console.WriteLine($"From City: {fromCity_A[i]}");
+                    Console.WriteLine($"To City: {toCity_A[i]}");
+                    Console.WriteLine($"Departure Time: {departureTime_A[i]}");
+                    Console.WriteLine($"Duration : {duration_A[i]} hours");
+                    Console.WriteLine($"Seats Number: {SeatsNum_A[i]} Seats"); // Number of Avilabe seats on specific flight
+                    Console.WriteLine($"Reserved Seats Number: {SeatReserved_A[i]} Seats"); // display how many number of seat are reserve in th flight
+                    Console.WriteLine($"Remaining  Seats Number: {SeatsNum_A[i] - SeatReserved_A[i]} Seats"); // display how many of seats are remaine
+                    Console.WriteLine("-------------------------------------------------------------------------");
+                }
+            }
+
+            return true;
+
+        }
+
 
         //                    ========================= System Utilities & Final Flow ===========================
 
@@ -362,7 +385,11 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                         Console.ReadKey();
                         break;
                     case 3:
-
+                        Console.WriteLine("Enter the code of Flight : ");
+                        string code = Console.ReadLine();
+                        FindFlightByCode(code);
+                        Console.WriteLine("\nPress any key to return to the menu...");
+                        Console.ReadKey();
                         break;
                     case 4:
 
