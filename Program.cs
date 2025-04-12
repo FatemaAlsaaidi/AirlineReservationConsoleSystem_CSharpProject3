@@ -13,7 +13,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         static DateTime[] departureTime_A = new DateTime[Max_Flight];
         static int[] duration_A = new int[Max_Flight];
         static int[] SeatsNum_A = new int[Max_Flight];
-        static bool[] AvailableFlights = new bool[Max_Flight];
+        static int[] SeatReserved_A = new int[Max_Flight];
 
         // flag to validate the user input 
         static bool isValid = false;
@@ -75,7 +75,6 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
             departureTime_A[FlightCounter] = departureTime;
             duration_A[FlightCounter] = duration;
             SeatsNum_A[FlightCounter] = SeatsNum;
-            AvailableFlights[FlightCounter] = true;
 
         }
         //                    ==========================Flight and Passenger Management (5–8) ==================
@@ -87,7 +86,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
             for (int i = 0; i < FlightCounter; i++)
             {
                 //check if flight is avilable
-                if (AvailableFlights[i] == true)
+                if (SeatReserved_A[i] < SeatsNum_A[i])
                 {
                     // Display all information of avilable flight
                     Console.WriteLine($"Avilable Flight {FlightCounter}: ");
@@ -97,6 +96,8 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                     Console.WriteLine($"Departure Time: {departureTime_A[i]}");
                     Console.WriteLine($"Duration : {duration_A[i]} hours");
                     Console.WriteLine($"Seats Number: {SeatsNum_A[i]} Seats"); // Number of Avilabe seats on specific flight
+                    Console.WriteLine($"Reserved Seats Number: {SeatReserved_A[i]} Seats"); // display how many number of seat are reserve in th flight
+                    Console.WriteLine($"Remaining  Seats Number: {SeatsNum_A[i] - SeatReserved_A[i]} Seats"); // display how many of seats are remaine
                     Console.WriteLine("-------------------------------------------------------------------------");
                 }
             }
@@ -106,7 +107,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
             for (int i = 0; i < FlightCounter; i++)
             {
                 //check if flight is is not avilable
-                if (AvailableFlights[i] == false)
+                if (SeatReserved_A[i] == SeatsNum_A[i])
                 {
                     // display the information of not avilable flight
                     Console.WriteLine($"Avilable Flight : ");
@@ -116,6 +117,9 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                     Console.WriteLine($"Departure Time: {departureTime_A[i]}");
                     Console.WriteLine($"Duration : {duration_A[i]} hours");
                     Console.WriteLine($"Seats Number: {SeatsNum_A[i]} Seats"); // Number of Avilabe seats on specific flight
+                    Console.WriteLine($"Reserved Seats Number: {SeatReserved_A[i]} Seats"); // display how many number of seat are reserve in th flight
+                    Console.WriteLine($"Remaining  Seats Number: {SeatsNum_A[i] - SeatReserved_A[i]} Seats"); // display how many of seats are remaine
+                    Console.WriteLine("-------------------------------------------------------------------------");
                 }
             }
         }
