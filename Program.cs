@@ -1,4 +1,7 @@
-﻿namespace AirlineReservationConsoleSystem_CSharpProject3
+﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Diagnostics.Metrics;
+
+namespace AirlineReservationConsoleSystem_CSharpProject3
 {
     internal class Program
     {   // global variables and arraies for flight ....... 
@@ -12,6 +15,9 @@
         static int[] SeatsNum_A = new int[Max_Flight];
         static bool[] AvailableFlights = new bool[Max_Flight];
 
+        // flag to validate the user input 
+        static bool isValid = false;
+
         //                                =====================Startup & Navigation=============
 
         // 1. display welcome message method..........
@@ -22,21 +28,38 @@
         // 2. show main menu method
         public static int ShowMainMenu()
         {
-            // Just to clear the screen
-            Console.Clear();
-            //Print the menu lists
-            Console.WriteLine("Airline Reservation System");
-            Console.WriteLine("1. Add Flight");
-            Console.WriteLine("2. Display All Flights");
-            Console.WriteLine("3. Find Flight By Code");
-            Console.WriteLine("4. Update Flight Departure");
-            Console.WriteLine("5. Cancel Flight Booking");
-            Console.WriteLine("0. Exit");
-            Console.WriteLine("Enter the option: ");
+            int option = 0;
+            do
+            {
+                // Just to clear the screen
+                Console.Clear();
+                //Print the menu lists
+                Console.WriteLine("Airline Reservation System");
+                Console.WriteLine("1. Add Flight");
+                Console.WriteLine("2. Display All Flights");
+                Console.WriteLine("3. Find Flight By Code");
+                Console.WriteLine("4. Update Flight Departure");
+                Console.WriteLine("5. Cancel Flight Booking");
+                Console.WriteLine("0. Exit");
+                Console.WriteLine("Enter the option: ");
+                string input = Console.ReadLine();
+                try
+                {
+                    option = int.Parse(input);// Attempt to parse the input
+                    isValid = true; // If parsing is successful, set isValid to true
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Invalid input. Please enter a number between 0 and 5.");
+                    Console.WriteLine("Press any key to continue...");
+                    Console.ReadKey(); // Wait for user to acknowledge the message
+                    isValid = false; // Keep isValid false to repeat the loop
+                }
+            }while(!isValid); // Continue looping until valid input is received
 
-            int option = int.Parse(Console.ReadLine());
             return option;
         }
+
         // 3. Exit Application method
         public static void ExitApplication()
         {
@@ -80,7 +103,8 @@
                 int Seats_Num = 0;
                 char ChoiceChar = 'y';
                 bool AddMore = true;
-                bool isValid = true;
+                
+                int traies = 0; 
 
                 switch (option)
                 {
@@ -104,10 +128,12 @@
                                 {
                                     Console.WriteLine("Flight code cannot be empty.");
                                     isValid = false;
+                                    traies++;
                                 }
                                 else
                                 {
                                     isValid = true;
+                                    traies = 0;
                                 }
 
                                 // (Optional) Check if flight code already exists
@@ -117,15 +143,25 @@
                                     {
                                         Console.WriteLine("A flight with this code already exists.");
                                         isValid = false;
+                                        traies++;
                                     }
                                     else
                                     {
                                         isValid = true;
+                                        traies = 0;
                                     }
 
                                 }
 
-                            } while (!isValid); // if the input is not vlidate repet ask the user 
+                                if (!isValid && traies > 3)
+                                {
+                                    Console.WriteLine("Failed to provide a valid flight code after 3 tries.");
+                                    break;
+                                }
+
+                            } while (!isValid && traies <= 3); // if the input is not vlidate repet ask the user 
+
+                            
 
                             // From City Input
                             // use do while loop to excute the quations of input data for first time befor check the input data if it is valide or no .
