@@ -1,5 +1,6 @@
 ﻿using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Diagnostics.Metrics;
+using System;
 
 namespace AirlineReservationConsoleSystem_CSharpProject3
 {
@@ -14,6 +15,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         static int[] duration_A = new int[Max_Flight];
         static int[] SeatsNum_A = new int[Max_Flight];
         static int[] SeatReserved_A = new int[Max_Flight];
+        static int[] price_A = new int[Max_Flight];
 
         // flag to validate the user input 
         static bool isValid = false;
@@ -25,10 +27,11 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         static string[] PassengerName_A = new string[100];
         static string[] BookingFlightCode_A = new string[100];
         static string[] GenerateBookingID_A = new string[100];
+        static int tickets = 0;
 
         //                                =====================Startup & Navigation=============
 
-            // 1. display welcome message method..........
+        // 1. display welcome message method..........
         public static void DisplayWelcomeMessage()
         {
             Console.WriteLine("Welcome to Airline Reservation System");
@@ -53,6 +56,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                 Console.WriteLine("8. Generate Booking ID");
                 Console.WriteLine("9. Display Flight Details");
                 Console.WriteLine("10.Search Bookings By Destination");
+                Console.WriteLine("11. Calculate Fare");
                 Console.WriteLine("0. Exit");
                 Console.WriteLine("Enter the option: ");
                 string input = Console.ReadLine();
@@ -79,7 +83,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
             Console.WriteLine("Thanks! Have Happy Day!");
         }
         // 4. Add Flight information method
-        public static void AddFlight(string flightCode, string fromCity, string toCity, DateTime departureTime, int duration, int SeatsNum)
+        public static void AddFlight(string flightCode, string fromCity, string toCity, DateTime departureTime, int duration, int SeatsNum, int price)
         {
             // If all validations pass, save the data
             flightCode_A[FlightCounter] = flightCode;
@@ -88,6 +92,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
             departureTime_A[FlightCounter] = departureTime;
             duration_A[FlightCounter] = duration;
             SeatsNum_A[FlightCounter] = SeatsNum;
+            price_A[FlightCounter] = price;
 
         }
         //                    ==========================Flight and Passenger Management (5–8) ==================
@@ -99,7 +104,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
             for (int i = 0; i < FlightCounter; i++)
             {
                 //check if flight is avilable
-                if (SeatReserved_A[i] < SeatsNum_A[i])
+                if (SeatReserved_A[i] <= SeatsNum_A[i])
                 {
                     Console.WriteLine($"Avilable Flight {i + 1}: ");
                     // Display all information of avilable flight
@@ -115,38 +120,35 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                 }
             }
 
-            Console.WriteLine("All Not Avilable Flight Information ");
-            // Loop through all flights up to the current number of not valiable flight
+            Console.WriteLine("All Not Available Flight Information ");
+            bool isFound = false; // reset and use local variable
+                                  // Loop through all flights up to the current number of not valiable flight
             for (int i = 0; i < FlightCounter; i++)
             {
-                //check if flight is is not avilable
-                if (SeatReserved_A[i] == SeatsNum_A[i])
+                // check if flight is not available
+                if (SeatReserved_A[i] >= SeatsNum_A[i])
                 {
-                    // display the information of not avilable flight
-                    Console.WriteLine($"Avilable Flight : ");
+                    isFound = true;
+                    // display the information of not available flight
+                    Console.WriteLine($"Unavailable Flight {i + 1}: ");
                     Console.WriteLine($"Flight Code: {flightCode_A[i]}");
                     Console.WriteLine($"From City: {fromCity_A[i]}");
                     Console.WriteLine($"To City: {toCity_A[i]}");
                     Console.WriteLine($"Departure Time: {departureTime_A[i]}");
                     Console.WriteLine($"Duration : {duration_A[i]} hours");
-                    Console.WriteLine($"Seats Number: {SeatsNum_A[i]} Seats"); // Number of Avilabe seats on specific flight
-                    Console.WriteLine($"Reserved Seats Number: {SeatReserved_A[i]} Seats"); // display how many number of seat are reserve in th flight
-                    Console.WriteLine($"Remaining  Seats Number: {SeatsNum_A[i] - SeatReserved_A[i]} Seats"); // display how many of seats are remaine
+                    Console.WriteLine($"Seats Number: {SeatsNum_A[i]} Seats");
+                    Console.WriteLine($"Reserved Seats Number: {SeatReserved_A[i]} Seats");
+                    Console.WriteLine($"Remaining  Seats Number: {SeatsNum_A[i] - SeatReserved_A[i]} Seats");
                     Console.WriteLine("-------------------------------------------------------------------------");
-
-                }
-                else
-                {
-                    ISFound = false;
                 }
             }
 
-            if (ISFound = false)
+            if (!isFound)
             {
-                Console.WriteLine("There is not flight is not available ");
+                Console.WriteLine("There is no flight that is fully booked.");
             }
         }
-            
+
         //6. Find Flight By Code
         public static bool FindFlightByCode(string code)
         {
@@ -196,18 +198,23 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         //9. Book Flight
         public static void BookFlight(string passengerName, string flightCode = "Default001")
         {
+            int index = 0;
             string bookingID = GenerateBookingID(passengerName);
             PassengerName_A[BookingCounter] = passengerName;
             BookingFlightCode_A[BookingCounter] = flightCode;
             GenerateBookingID_A[BookingCounter] = bookingID;
+            Console.WriteLine("How many tickets do you want");
+            int tickets = int.Parse(Console.ReadLine());
+
             for (int i = 0; i < FlightCounter; i++)
             {
-                if (BookingFlightCode_A[i] == flightCode)
+                if (flightCode_A[i] == flightCode)
                 {
-                    SeatReserved_A[i]++;
+                    SeatReserved_A[i] = SeatReserved_A[i] + tickets; // Resserved seat for every tickets
                     break;
                 }
             }
+            
 
         }
 
@@ -310,6 +317,12 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
 
             
         }
+        //                  ==========================Function Overloading ========================
+        //14. CalculateFare(int basePrice, int numTickets)
+        public static int CalculateFare(int basePrice, int numTickets)
+        {
+            return basePrice * numTickets;
+        }
         //                   ========================= System Utilities & Final Flow ===========================
 
         //  1. Start System method 
@@ -330,6 +343,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                 string flight_Code = null;
                 string from_City = null;
                 string to_City = null;
+                int Fly_Price=0;
                 DateTime departure_Time;
                 int duration_1 = 0;
                 int Seats_Num = 0;
@@ -504,11 +518,28 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
 
                             } while (!isValid); // if the input is not vlidate repet ask the user 
 
+                            do
+                            {
+                                Console.WriteLine("Enter the price of this flight");
+                                Fly_Price = int.Parse(Console.ReadLine());
+                                //seatsNum input validation
+                                if (Fly_Price <= 0)
+                                {
+                                    Console.WriteLine("Number of seats must be greater than zero.");
+                                    isValid = false;
+                                }
+                                else
+                                {
+                                    isValid = true;
+                                }
+
+                            } while (isValid = false);
+
                             // check is all inputs data is valid or not 
                             if (isValid)
                             {
                                 // store all inputs data in the array 
-                                AddFlight(flightCode: flight_Code, fromCity: from_City, toCity: to_City, departureTime: departure_Time, duration: duration_1, SeatsNum: Seats_Num);
+                                AddFlight(flightCode: flight_Code, fromCity: from_City, toCity: to_City, departureTime: departure_Time, duration: duration_1, SeatsNum: Seats_Num, price: Fly_Price);
                                 Console.WriteLine("Flight added successfully!");
                                 FlightCounter++;
                             }
@@ -646,10 +677,6 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                         break;
 
                     case 8:
-
-                        break;
-
-                    case 9:
                         Console.WriteLine("Enter the the flight code: ");
                         string flightCode = Console.ReadLine();
                         DisplayFlightDetails(flightCode);
@@ -659,7 +686,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
 
                         break;
 
-                    case 10:
+                    case 9:
                         Console.WriteLine("Enter the To City name:");
                         string ToCityInput = Console.ReadLine();
                         SearchBookingsByDestination(ToCityInput);
@@ -667,11 +694,28 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                         Console.ReadKey();
                         break;
 
+                    case 10:
+                        int index = 0;
+                        Console.WriteLine("Enter the flight code ");
+                        string codes= Console.ReadLine();
+                        for (int i= 0; i<FlightCounter; i++)
+                        {
+                           if (flightCode_A[i]== codes)
+                            {
+                                index= i;
+                            }
+                        }
+                       int CurrentPrice = price_A[index];
+                   
+                       CalculateFare(CurrentPrice, tickets);
+                        break;
+
                     case 0:
                         //calling ExitApplication() function
                         ExitApplication();
                         //using return to stop the whole method thus, stop whole program 
                         return;
+
 
                     default:
                         // // Display an message for invalid user input 
