@@ -179,14 +179,36 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         //}
 
         //                    ========================= Passenger Booking Functions =============================
-        //1. Book Flight
+        //9. Book Flight
         public static void BookFlight(string passengerName, string flightCode = "Default001")
         { 
             PassengerName_A[count_seat] = passengerName;
             BookingFlightCode_A[count_seat] = flightCode;
       
         }
-        //                    ========================= System Utilities & Final Flow ===========================
+
+        // 10. Validate Flight Code
+        public static bool ValidateFlightCode(string flightCode)
+        {
+            bool InExist = false;
+            for (int i = 0; i< FlightCounter; i++)
+            {
+                if (flightCode_A[i] == flightCode)
+                {
+                    Console.WriteLine("The flight code exist");
+                    InExist = true;
+                }
+                else
+                {
+                    Console.WriteLine("The flight code dose not exist");
+                    InExist = false;
+                }
+            }
+
+            return InExist;
+        }
+
+        //                   ========================= System Utilities & Final Flow ===========================
 
         //  1. Start System method 
         public static void StartSystem()
@@ -516,7 +538,10 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
 
                         break;
                     case 7:
-
+                        Console.WriteLine("Enter the flight code :");
+                        string flightCodeInput = Console.ReadLine();
+                        ValidateFlightCode(flightCodeInput);
+                        Console.ReadKey();
                         break;
 
                     case 8:
