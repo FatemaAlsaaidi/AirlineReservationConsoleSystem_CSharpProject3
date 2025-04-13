@@ -18,6 +18,11 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         // flag to validate the user input 
         static bool isValid = false;
 
+        // variables and arraies Passenger Booking Functions section
+        //static int BookingCounter = 0;
+        static string[] PassengerName_A = new string[200];
+        static string[] BookingFlightCode_A = new string[200];
+        static int count_seat = 0;
         //                                =====================Startup & Navigation=============
 
         // 1. display welcome message method..........
@@ -40,6 +45,11 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                 Console.WriteLine("3. Find Flight By Code");
                 Console.WriteLine("4. Update Flight Departure");
                 Console.WriteLine("5. Cancel Flight Booking");
+                Console.WriteLine("6. Book Flight");
+                Console.WriteLine("7. Validate Flight Code");
+                Console.WriteLine("8. Generate Booking ID");
+                Console.WriteLine("9. Display Flight Details");
+                Console.WriteLine("10.Search Bookings By Destination");
                 Console.WriteLine("0. Exit");
                 Console.WriteLine("Enter the option: ");
                 string input = Console.ReadLine();
@@ -162,8 +172,20 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
 
             return departureTime_A[index] = departure;
         }
+        // 8. CancelFlightBooking(out string passengerName) 
+        //public static string CancelFlightBooking(out string passengerName)
+        //{
 
+        //}
 
+        //                    ========================= Passenger Booking Functions =============================
+        //1. Book Flight
+        public static void BookFlight(string passengerName, string flightCode = "Default001")
+        { 
+            PassengerName_A[count_seat] = passengerName;
+            BookingFlightCode_A[count_seat] = flightCode;
+      
+        }
         //                    ========================= System Utilities & Final Flow ===========================
 
         //  1. Start System method 
@@ -180,7 +202,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
             {
                 int option = ShowMainMenu();
 
-                // Declare variables to store singe value of user input 
+                // Declare variables to store singe value of user input in case 1 
                 string flight_Code = null;
                 string from_City = null;
                 string to_City = null;
@@ -189,7 +211,11 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                 int Seats_Num = 0;
                 char ChoiceChar = 'y';
                 bool AddMore = true;
-                int traies = 0; 
+                int traies = 0;
+
+                // Declare variables to store singe value of user input in case 6
+
+                bool BookingMore = true;
 
                 switch (option)
                 {
@@ -417,6 +443,91 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
 
                         break;
                     case 5:
+                        // CancelFlightBooking(out string passengerName) 
+                        break;
+                    case 6:
+                        while (BookingMore)
+                        {
+                            int FlightIndex = 0;
+                            Console.WriteLine("Enter passenger Name :");
+                            string passengerName_Input = Console.ReadLine();
+
+                            Console.WriteLine("Enter Flight Code: ");
+                            string flightCode_Input = Console.ReadLine();
+                            for (int i = 0; i < FlightCounter; i++)
+                            {
+                                if (flightCode_A[i] == flightCode_Input)
+                                {
+                                    FlightIndex = i;
+                                    break;
+                                }
+                            }
+
+                            if (flightCode_A[FlightIndex] == flightCode_Input)
+                            {
+                                if (count_seat < SeatsNum_A[FlightIndex])
+                                {
+                                    BookFlight(passengerName: passengerName_Input, flightCode: flightCode_Input);
+                                    Console.WriteLine("Flight booking successfully!");
+                                    count_seat++;
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("No available seats on this flight.");
+                                    BookingMore = false;
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Flight code can not found it");
+                                BookingMore = false;
+                            }
+                            //ask user if want to Booking more  
+                            Console.WriteLine("Do you want to bookimg more flight information?! (y/n)");
+                            ChoiceChar = Console.ReadKey().KeyChar;
+                            Console.WriteLine();
+                            // use if statement to deal with ChoiceChar input if y or n
+                            if (ChoiceChar == 'Y' || ChoiceChar == 'y')
+                            {
+                                // Check if any flights still have available seats
+                                bool hasAvailableSeats = false;
+                                for (int i = 0; i < FlightCounter; i++)
+                                {
+                                    if (count_seat < SeatsNum_A[i])
+                                    {
+                                        hasAvailableSeats = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!hasAvailableSeats)
+                                {
+                                    Console.WriteLine("Cannot book more flights. All are fully booked.");
+                                    BookingMore = false;
+                                }
+                            }
+                            else
+                            {
+                                BookingMore = false; // display AddMore as false is user do not booking more flight 
+                            }
+                            Console.ReadLine();
+                        } 
+
+                        break;
+                    case 7:
+
+                        break;
+
+                    case 8:
+
+                        break;
+
+                    case 9:
+
+                        break;
+
+                    case 10:
 
                         break;
 
