@@ -145,6 +145,23 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
             return true;
 
         }
+        //7. Update Flight Departure
+        public static DateTime UpdateFlightDeparture(ref DateTime departure)
+        {
+            int index = 0;
+            Console.WriteLine("Enter the flight code: ");
+            string FlightCode = Console.ReadLine();
+            for (int i = 0; i < FlightCounter; i++)
+            {
+                if (flightCode_A[i] == FlightCode)
+                {
+                    index = i;
+                }
+                
+            }
+
+            return departureTime_A[index] = departure;
+        }
 
 
         //                    ========================= System Utilities & Final Flow ===========================
@@ -392,6 +409,11 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                         Console.ReadKey();
                         break;
                     case 4:
+                        Console.WriteLine($" Update Flight Departure of Flight : ");
+                        DateTime departure = DateTime.Parse(Console.ReadLine());
+                        UpdateFlightDeparture(ref departure);
+                        Console.WriteLine("\nPress any key to return to the menu...");
+                        Console.ReadKey();
 
                         break;
                     case 5:
