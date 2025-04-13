@@ -196,11 +196,22 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         //9. Book Flight
         public static void BookFlight(string passengerName, string flightCode = "Default001")
         {
-                PassengerName_A[BookingCounter] = passengerName;
-                BookingFlightCode_A[BookingCounter] = flightCode;
-                PassengerName_A[BookingCounter] = GenerateBookingID(passengerName);
+            string bookingID = GenerateBookingID(passengerName);
+            PassengerName_A[BookingCounter] = passengerName;
+            BookingFlightCode_A[BookingCounter] = flightCode;
+            GenerateBookingID_A[BookingCounter] = bookingID;
+            for (int i = 0; i < FlightCounter; i++)
+            {
+                if (BookingFlightCode_A[i] == flightCode)
+                {
+                    SeatReserved_A[i]++;
+                    break;
+                }
+            }
+
         }
 
+        // 
         // 10. Validate Flight Code
         public static bool ValidateFlightCode(string flightCode)
         {
