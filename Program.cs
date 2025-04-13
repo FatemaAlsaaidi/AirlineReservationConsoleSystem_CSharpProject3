@@ -285,7 +285,31 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
             }
 
         }
+        // 13.  Search Bookings By Destination
+        public static void SearchBookingsByDestination(string toCity)
+        {
+            int ToCityIndex = 0;
+            for (int i = 0; i < FlightCounter; i++) 
+            {
+                if (toCity_A[i] == toCity)
+                {
+                    ToCityIndex = i;
+                }
+            }
 
+            for(int i = 0;i < BookingCounter; i++)
+            {
+                if (flightCode_A[ToCityIndex] == BookingFlightCode_A[i])
+                {
+                    Console.WriteLine(PassengerName_A[i]);
+                    Console.WriteLine(GenerateBookingID_A[i]);
+                    Console.WriteLine("----------------------------------------------");
+                }
+                
+            }
+
+            
+        }
         //                   ========================= System Utilities & Final Flow ===========================
 
         //  1. Start System method 
@@ -636,7 +660,11 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                         break;
 
                     case 10:
-
+                        Console.WriteLine("Enter the To City name:");
+                        string ToCityInput = Console.ReadLine();
+                        SearchBookingsByDestination(ToCityInput);
+                        Console.WriteLine("\nPress any key to return to the menu...");
+                        Console.ReadKey();
                         break;
 
                     case 0:
