@@ -23,9 +23,11 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         static string[] PassengerName_A = new string[200];
         static string[] BookingFlightCode_A = new string[200];
         static int count_seat = 0;
+        static string[] GenerateBookingID_A = new string[200];
+
         //                                =====================Startup & Navigation=============
 
-        // 1. display welcome message method..........
+            // 1. display welcome message method..........
         public static void DisplayWelcomeMessage()
         {
             Console.WriteLine("Welcome to Airline Reservation System");
@@ -184,7 +186,10 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         { 
             PassengerName_A[count_seat] = passengerName;
             BookingFlightCode_A[count_seat] = flightCode;
-      
+            PassengerName_A[count_seat] = GenerateBookingID(passengerName);
+            Console.ReadLine();
+
+
         }
 
         // 10. Validate Flight Code
@@ -207,6 +212,16 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
 
             return InExist;
         }
+        // 11.  Generate Booking ID
+        public static string GenerateBookingID(string passengerName)
+        {
+
+            string BookingID = passengerName + "2025";
+            return BookingID;
+        }
+
+        // 12.  Display Flight Details
+        pu
 
         //                   ========================= System Utilities & Final Flow ===========================
 
