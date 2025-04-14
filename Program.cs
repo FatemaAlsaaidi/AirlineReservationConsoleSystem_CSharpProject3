@@ -53,10 +53,9 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                 Console.WriteLine("5. Cancel Flight Booking");
                 Console.WriteLine("6. Book Flight");
                 Console.WriteLine("7. Validate Flight Code");
-                Console.WriteLine("8. Generate Booking ID");
-                Console.WriteLine("9. Display Flight Details");
-                Console.WriteLine("10.Search Bookings By Destination");
-                Console.WriteLine("11. Calculate Fare");
+                Console.WriteLine("8. Display Flight Details");
+                Console.WriteLine("9.Search Bookings By Destination");
+                Console.WriteLine("10. Calculate Fare");
                 Console.WriteLine("0. Exit");
                 Console.WriteLine("Enter the option: ");
                 string input = Console.ReadLine();
@@ -188,10 +187,35 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
             return departureTime_A[index] = departure;
         }
         // 8. CancelFlightBooking(out string passengerName) 
-        //public static string CancelFlightBooking(out string passengerName)
-        //{
-
-        //}
+        public static string CancelFlightBooking(out string passengerName)
+        {
+            int index = 0;
+            passengerName = ""; // Initial assignment
+            for (int i = 0;i < BookingCounter; i++)
+            {
+                if (PassengerName_A[i] == passengerName)
+                {
+                    index = i;
+                }
+            }
+            bool res = ConfirmAction("Cancel Flight Booking");
+            if (res)
+            {
+                
+                for (int i = index; i < BookingCounter; i++)
+                {
+                    
+                    PassengerName_A[i] = PassengerName_A[i + 1];
+                    GenerateBookingID_A[i] = GenerateBookingID_A[i + 1];
+                }
+                BookingCounter--;
+                Console.WriteLine("Cancel successfully");
+            }
+            else
+            {
+                Console.WriteLine("Cancel unsuccessful!");
+            }
+        }
 
         //                    ========================= Passenger Booking Functions =============================
         //9. Book Flight +  Generate Booking ID
@@ -338,8 +362,26 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
             return TotalFarePrice;
         }
         //                   ========================= System Utilities & Final Flow ===========================
+        // 17.  Confirm Action 
+        public static bool ConfirmAction(string action)
+        {
+            while (true)
+            {
+                Console.WriteLine($"{action} confirm (y/n):");
+                string input = Console.ReadLine();
 
-        //  1. Start System method 
+                if (!string.IsNullOrEmpty(input))
+                {
+                    char response = char.ToLower(input[0]);
+
+                    if (response == 'y') return true;
+                    if (response == 'n') return false;
+                }
+
+                Console.WriteLine("Invalid input. Please enter 'y' or 'n'.");
+            }
+        }
+        //  18. Start System method 
         public static void StartSystem()
         {
             // calling DisplayWelcomeMessage() function 
@@ -600,7 +642,10 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                         break;
                     // CancelFlightBooking
                     case 5:
-                        // CancelFlightBooking(out string passengerName) 
+                        Console.WriteLine("Enter passenger Name: ");
+                        string passengerName_Input0 = Console.ReadLine();
+                        CancelFlightBooking(out passengerName_Input0);
+                        Console.ReadLine() ;
                         break;
                     // Book Flight +  GenerateBookingID
                     case 6:
