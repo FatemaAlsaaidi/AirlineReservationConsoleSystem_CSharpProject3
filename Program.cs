@@ -83,7 +83,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
             Console.WriteLine("Thanks! Have Happy Day!");
         }
         // 4. Add Flight information method
-        public static void AddFlight(string flightCode, string fromCity, string toCity, DateTime departureTime, int duration, int SeatsNum, int price)
+        public static void AddFlight(string flightCode, string fromCity, string toCity, DateTime departureTime, int duration, int SeatsNum)
         {
             // If all validations pass, save the data
             flightCode_A[FlightCounter] = flightCode;
@@ -92,7 +92,6 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
             departureTime_A[FlightCounter] = departureTime;
             duration_A[FlightCounter] = duration;
             SeatsNum_A[FlightCounter] = SeatsNum;
-            price_A[FlightCounter] = price;
 
         }
         //                    ==========================Flight and Passenger Management (5–8) ==================
@@ -195,7 +194,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         //}
 
         //                    ========================= Passenger Booking Functions =============================
-        //9. Book Flight
+        //9. Book Flight +  Generate Booking ID
         public static void BookFlight(string passengerName, string flightCode = "Default001")
         {
             int index = 0;
@@ -321,7 +320,22 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         //14. CalculateFare(int basePrice, int numTickets)
         public static int CalculateFare(int basePrice, int numTickets)
         {
-            return basePrice * numTickets;
+            int TotalFarePrice = basePrice * numTickets;
+            return TotalFarePrice;
+        }
+
+        public static double CalculateFare(double basePrice, int numTickets)
+        {
+            double TotalFarePrice = basePrice * numTickets;
+            return TotalFarePrice;
+        }
+
+        public static double CalculateFare(int basePrice, int numTickets, int discount)
+        {
+ 
+            double discountAmount = (basePrice / 100) * discount;
+            double TotalFarePrice = (basePrice * numTickets) - discount;
+            return TotalFarePrice;
         }
         //                   ========================= System Utilities & Final Flow ===========================
 
@@ -357,6 +371,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
 
                 switch (option)
                 {
+                    // add flight 
                     case 1:
                         while (AddMore && FlightCounter < Max_Flight)
                         {
@@ -518,28 +533,13 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
 
                             } while (!isValid); // if the input is not vlidate repet ask the user 
 
-                            do
-                            {
-                                Console.WriteLine("Enter the price of this flight");
-                                Fly_Price = int.Parse(Console.ReadLine());
-                                //seatsNum input validation
-                                if (Fly_Price <= 0)
-                                {
-                                    Console.WriteLine("Number of seats must be greater than zero.");
-                                    isValid = false;
-                                }
-                                else
-                                {
-                                    isValid = true;
-                                }
-
-                            } while (isValid = false);
+                            
 
                             // check is all inputs data is valid or not 
                             if (isValid)
                             {
                                 // store all inputs data in the array 
-                                AddFlight(flightCode: flight_Code, fromCity: from_City, toCity: to_City, departureTime: departure_Time, duration: duration_1, SeatsNum: Seats_Num, price: Fly_Price);
+                                AddFlight(flightCode: flight_Code, fromCity: from_City, toCity: to_City, departureTime: departure_Time, duration: duration_1, SeatsNum: Seats_Num);
                                 Console.WriteLine("Flight added successfully!");
                                 FlightCounter++;
                             }
@@ -575,12 +575,13 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                         }
                         
                         break;
-
+                    // display all flight
                     case 2:
                         DisplayAllFlights();
                         Console.WriteLine("\nPress any key to return to the menu...");
                         Console.ReadKey();
                         break;
+                    //Find Flight By Code
                     case 3:
                         Console.WriteLine("Enter the code of Flight : ");
                         string code = Console.ReadLine();
@@ -588,6 +589,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                         Console.WriteLine("\nPress any key to return to the menu...");
                         Console.ReadKey();
                         break;
+                    //Update Flight Departure
                     case 4:
                         Console.WriteLine($" Update Flight Departure of Flight : ");
                         DateTime departure = DateTime.Parse(Console.ReadLine());
@@ -596,9 +598,11 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                         Console.ReadKey();
 
                         break;
+                    // CancelFlightBooking
                     case 5:
                         // CancelFlightBooking(out string passengerName) 
                         break;
+                    // Book Flight +  GenerateBookingID
                     case 6:
                         while (BookingMore)
                         {
@@ -669,13 +673,14 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                         } 
 
                         break;
+                    // Validate Flight Code
                     case 7:
                         Console.WriteLine("Enter the flight code :");
                         string flightCodeInput = Console.ReadLine();
                         ValidateFlightCode(flightCodeInput);
                         Console.ReadKey();
                         break;
-
+                    // DisplayFlightDetails
                     case 8:
                         Console.WriteLine("Enter the the flight code: ");
                         string flightCode = Console.ReadLine();
@@ -685,7 +690,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
 
 
                         break;
-
+                    //  Search Bookings By Destination
                     case 9:
                         Console.WriteLine("Enter the To City name:");
                         string ToCityInput = Console.ReadLine();
@@ -693,21 +698,28 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                         Console.WriteLine("\nPress any key to return to the menu...");
                         Console.ReadKey();
                         break;
-
+                    //  Function Overloading
                     case 10:
-                        int index = 0;
-                        Console.WriteLine("Enter the flight code ");
-                        string codes= Console.ReadLine();
-                        for (int i= 0; i<FlightCounter; i++)
-                        {
-                           if (flightCode_A[i]== codes)
-                            {
-                                index= i;
-                            }
-                        }
-                       int CurrentPrice = price_A[index];
-                   
-                       CalculateFare(CurrentPrice, tickets);
+                        double price1 = 0;
+                        int price2 = 0;
+                        int TicketNumber = 0;
+                        int discount;
+
+                        Console.Write("Enter the flight price: ");
+                        price1 = double.Parse(Console.ReadLine());
+                        price2 = int.Parse(Console.ReadLine());
+
+                        Console.WriteLine("How many ticket do you want: ");
+                        int tickets = int.Parse(Console.ReadLine());
+
+
+                        int totalFare = CalculateFare(price2, tickets);
+                        double totalFare = CalculateFare(price1, tickets);
+                        Console.WriteLine("Total fare is: " + totalFare);
+
+                        Console.ReadKey();
+
+
                         break;
 
                     case 0:
