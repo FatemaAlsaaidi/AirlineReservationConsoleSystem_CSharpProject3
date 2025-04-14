@@ -700,24 +700,46 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                         break;
                     //  Function Overloading
                     case 10:
-                        double price1 = 0;
-                        int price2 = 0;
-                        int TicketNumber = 0;
-                        int discount;
+                        Console.Write("Enter base price: ");
+                        string baseInput = Console.ReadLine();
 
-                        Console.Write("Enter the flight price: ");
-                        price1 = double.Parse(Console.ReadLine());
-                        price2 = int.Parse(Console.ReadLine());
+                        Console.Write("Enter number of tickets: ");
+                        int numTickets = int.Parse(Console.ReadLine());
 
-                        Console.WriteLine("How many ticket do you want: ");
-                        int tickets = int.Parse(Console.ReadLine());
+                        Console.Write("Do you want to add a discount? (yes/no): ");
+                        string addDiscount = Console.ReadLine().ToLower();
 
+                        if (addDiscount == "yes")
+                        {
+                            Console.Write("Enter discount percentage: ");
+                            int discount = int.Parse(Console.ReadLine());
 
-                        int totalFare = CalculateFare(price2, tickets);
-                        double totalFare = CalculateFare(price1, tickets);
-                        Console.WriteLine("Total fare is: " + totalFare);
+                            // Assume base price is integer
+                            int basePriceInt = int.Parse(baseInput);
+                            double total = CalculateFare(basePriceInt, numTickets, discount);
+                            Console.WriteLine($"Total Fare with discount: {total}");
+                            Console.ReadLine();
+                        }
+                        else
+                        {
+                            // Try parsing as double first to check if base price is decimal
+                            if (baseInput.Contains("."))
+                            {
+                                double basePriceDouble = double.Parse(baseInput);
+                                double total = CalculateFare(basePriceDouble, numTickets);
+                                Console.WriteLine($"Total Fare: {total}");
+                                Console.ReadLine();
 
-                        Console.ReadKey();
+                            }
+                            else
+                            {
+                                int basePriceInt = int.Parse(baseInput);
+                                int total = CalculateFare(basePriceInt, numTickets);
+                                Console.WriteLine($"Total Fare: {total}");
+                                Console.ReadLine();
+
+                            }
+                        }
 
 
                         break;
