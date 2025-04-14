@@ -1,6 +1,7 @@
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Diagnostics.Metrics;
 using System;
+using System.Reflection;
 
 namespace AirlineReservationConsoleSystem_CSharpProject3
 {
@@ -23,19 +24,19 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         static bool ISFound = true;
 
         // variables and arraies Passenger Booking Functions section
-<<<<<<< HEAD
-        static int BookingCounter = 100;
-        static string[] PassengerName_A = new string[BookingCounter];
-        static string[] BookingFlightCode_A = new string[BookingCounter];
-        static int count_seat = 0;
-        static string[] PassengerGenerateBookingID_A = new string[BookingCounter];
-=======
+//<<<<<<< HEAD
+//        static int BookingCounter = 100;
+//        static string[] PassengerName_A = new string[BookingCounter];
+//        static string[] BookingFlightCode_A = new string[BookingCounter];
+//        static int count_seat = 0;
+//        static string[] PassengerGenerateBookingID_A = new string[BookingCounter];
+//=======
         static int BookingCounter = 0;
         static string[] PassengerName_A = new string[100];
         static string[] BookingFlightCode_A = new string[100];
         static string[] GenerateBookingID_A = new string[100];
         static int tickets = 0;
->>>>>>> 6517a507f108c8373baeb9bdd72a23b3e935be96
+//>>>>>>> 6517a507f108c8373baeb9bdd72a23b3e935be96
 
         //                                =====================Startup & Navigation=============
 
@@ -195,7 +196,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
             return departureTime_A[index] = departure;
         }
         // 8. CancelFlightBooking(out string passengerName) 
-        public static string CancelFlightBooking(out string passengerName)
+        public static void CancelFlightBooking(out string passengerName)
         {
             int index = 0;
             passengerName = ""; // Initial assignment
@@ -228,14 +229,15 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         //                    ========================= Passenger Booking Functions =============================
         //9. Book Flight +  Generate Booking ID
         public static void BookFlight(string passengerName, string flightCode = "Default001")
-<<<<<<< HEAD
         { 
-            PassengerName_A[count_seat] = passengerName;
-            BookingFlightCode_A[count_seat] = flightCode;
-            PassengerGenerateBookingID_A[count_seat] = GenerateBookingID(passengerName);
+//<<<<<<< HEAD
+//        { 
+//            PassengerName_A[count_seat] = passengerName;
+//            BookingFlightCode_A[count_seat] = flightCode;
+//            PassengerGenerateBookingID_A[count_seat] = GenerateBookingID(passengerName);
 
-=======
-        {
+//=======
+//        {
             int index = 0;
             string bookingID = GenerateBookingID(passengerName);
             PassengerName_A[BookingCounter] = passengerName;
@@ -243,18 +245,50 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
             GenerateBookingID_A[BookingCounter] = bookingID;
             Console.WriteLine("How many tickets do you want");
             int tickets = int.Parse(Console.ReadLine());
->>>>>>> 6517a507f108c8373baeb9bdd72a23b3e935be96
+//>>>>>>> 6517a507f108c8373baeb9bdd72a23b3e935be96
 
             for (int i = 0; i < FlightCounter; i++)
             {
                 if (flightCode_A[i] == flightCode)
                 {
+                    ISFound = true;
+                    index = i;
                     SeatReserved_A[i] = SeatReserved_A[i] + tickets; // Resserved seat for every tickets
-                    break;
+                    if (SeatReserved_A[i] <= SeatsNum_A[i]) 
+                    {
+                        isValid = true;
+                    }
+                    else
+                    {
+                        isValid = false;
+                    }
+                        break;
+                }
+                else
+                {
+                    ISFound = false;
                 }
             }
-            
 
+            if (isValid)
+            {
+                SeatsNum_A[index] = SeatsNum_A[index] - SeatReserved_A[index];
+                PassengerName_A[index] = passengerName;
+                BookingFlightCode_A[index] = flightCode;
+                GenerateBookingID_A[index] = bookingID;
+
+                Console.WriteLine("Booking Successfully");
+
+            }
+            else
+            {
+                Console.WriteLine("Booking Unsuccessfully");
+            }
+
+            if (ISFound == false)
+            {
+                Console.WriteLine("Flight code do not exist");
+            }
         }
 
         // 
@@ -281,58 +315,58 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         // 11.  Generate Booking ID
         public static string GenerateBookingID(string passengerName)
         {
-<<<<<<< HEAD
-            Random random = new Random();
-            string randomNum = random.Next(1, 100).ToString();
-            string BookingID = passengerName + randomNum;
+//<<<<<<< HEAD
+//            Random random = new Random();
+//            string randomNum = random.Next(1, 100).ToString();
+//            string BookingID = passengerName + randomNum;
 
            
-=======
-            //generate a random number
+//=======
+//            //generate a random number
             Random random = new Random();
             string randomNumber = random.Next(1, 100).ToString();
             string BookingID = passengerName + randomNumber;
->>>>>>> 6517a507f108c8373baeb9bdd72a23b3e935be96
+//>>>>>>> 6517a507f108c8373baeb9bdd72a23b3e935be96
             return BookingID;
         }
 
         // 12.  Display Flight Details
         public static void DisplayFlightDetails(string code)
         {
-<<<<<<< HEAD
-            for (int i = 0; i < FlightCounter; i++)
-            {
-                if (flightCode_A[i] == code)
-                {
-                    int countPassengerNumber = 0;
-                    for (int j = 0; j < count_seat; j++)
-                    {
-                        if (BookingFlightCode_A[j] == flightCode_A[i])
-                        {
-                            countPassengerNumber++;
-                        }
-                    }
-                    Console.WriteLine($"The flight code: {flightCode_A[i]}");
-                    Console.WriteLine($"From city: {fromCity_A[i]}");
-                    Console.WriteLine($"To city: {toCity_A[i]}");
-                    Console.WriteLine($"duration: {duration_A[i]}");
-                    Console.WriteLine($"departure Time: {departureTime_A[i]}");
-                    Console.WriteLine($"Number of passengers: {countPassengerNumber}");
-                    Console.WriteLine("===============================================");
-                    Console.WriteLine("passenger code: ");
-                }
-            }
-            for (int j = 0; j < BookingCounter; j++)
-            {
-                if (flightCode_A[j] == code)
-                {
-                    Console.WriteLine($"passenger name: {PassengerName_A[j]}");
-                    Console.WriteLine($"passenger code: {PassengerGenerateBookingID_A[j]}");
-                    Console.WriteLine("=================================================");
-                }
-            }
-        }
-=======
+//<<<<<<< HEAD
+//            for (int i = 0; i < FlightCounter; i++)
+//            {
+//                if (flightCode_A[i] == code)
+//                {
+//                    int countPassengerNumber = 0;
+//                    for (int j = 0; j < count_seat; j++)
+//                    {
+//                        if (BookingFlightCode_A[j] == flightCode_A[i])
+//                        {
+//                            countPassengerNumber++;
+//                        }
+//                    }
+//                    Console.WriteLine($"The flight code: {flightCode_A[i]}");
+//                    Console.WriteLine($"From city: {fromCity_A[i]}");
+//                    Console.WriteLine($"To city: {toCity_A[i]}");
+//                    Console.WriteLine($"duration: {duration_A[i]}");
+//                    Console.WriteLine($"departure Time: {departureTime_A[i]}");
+//                    Console.WriteLine($"Number of passengers: {countPassengerNumber}");
+//                    Console.WriteLine("===============================================");
+//                    Console.WriteLine("passenger code: ");
+//                }
+//            }
+//            for (int j = 0; j < BookingCounter; j++)
+//            {
+//                if (flightCode_A[j] == code)
+//                {
+//                    Console.WriteLine($"passenger name: {PassengerName_A[j]}");
+//                    Console.WriteLine($"passenger code: {PassengerGenerateBookingID_A[j]}");
+//                    Console.WriteLine("=================================================");
+//                }
+//            }
+//        }
+//=======
             int PassengerNumber = 0;
             for (int i = 0; i < FlightCounter; i++) 
             {
@@ -345,7 +379,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                             PassengerNumber++;
                         }
                     }
->>>>>>> 6517a507f108c8373baeb9bdd72a23b3e935be96
+//>>>>>>> 6517a507f108c8373baeb9bdd72a23b3e935be96
 
                     Console.WriteLine($"Flight Code: {flightCode_A[i]}");
                     Console.WriteLine($"From City: {fromCity_A[i]}");
@@ -798,20 +832,20 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                         break;
                     //  Search Bookings By Destination
                     case 9:
-<<<<<<< HEAD
-                        Console.WriteLine("Enter the flight code: ");
-                        string code_Diplay = Console.ReadLine();
-                        DisplayFlightDetails(code_Diplay);
-                        Console.WriteLine("\nPress any key to return to the menu...");
-                        Console.ReadKey();
+//<<<<<<< HEAD
+//                        Console.WriteLine("Enter the flight code: ");
+//                        string code_Diplay = Console.ReadLine();
+//                        DisplayFlightDetails(code_Diplay);
+//                        Console.WriteLine("\nPress any key to return to the menu...");
+//                        Console.ReadKey();
 
-=======
-                        Console.WriteLine("Enter the To City name:");
+//=======
+//                        Console.WriteLine("Enter the To City name:");
                         string ToCityInput = Console.ReadLine();
                         SearchBookingsByDestination(ToCityInput);
                         Console.WriteLine("\nPress any key to return to the menu...");
                         Console.ReadKey();
->>>>>>> 6517a507f108c8373baeb9bdd72a23b3e935be96
+//>>>>>>> 6517a507f108c8373baeb9bdd72a23b3e935be96
                         break;
                     //  Function Overloading
                     case 10:
