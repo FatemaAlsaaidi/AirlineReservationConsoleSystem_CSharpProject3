@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using System.Diagnostics;
 
 namespace AirlineReservationConsoleSystem_CSharpProject3
 {
@@ -19,8 +20,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         static int[] duration_A = new int[Max_Flight];
         static int[] SeatsNum_A = new int[Max_Flight];
         static int[] SeatReserved_A = new int[Max_Flight];
-        static double[] Ticket_Price_A = new double[Max_Flight];
-        static int[] price_A = new int[Max_Flight];
+        static string [] Ticket_Price_A = new string[Max_Flight];
 
         // flag to validate the user input 
         static bool isValid = false;
@@ -33,7 +33,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         static string[] PassengerName_A = new string[100];
         static string[] BookingFlightCode_A = new string[100];
         static string[] GenerateBookingID_A = new string[100];
-        static int tickets = 0;
+        static int [] booking_tickets = new int[100];
         
 
         //                                =====================Startup & Navigation=============
@@ -61,7 +61,6 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                 Console.WriteLine("6. Book Flight");
                 Console.WriteLine("7. Display Flight Details");
                 Console.WriteLine("8.Search Bookings By Destination");
-                Console.WriteLine("9. Calculate Fare");
                 Console.WriteLine("0. Exit");
                 Console.WriteLine("Enter the option: ");
                 string input = Console.ReadLine();
@@ -197,18 +196,20 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         public static void CancelFlightBooking(out string passengerName)
         {
             int index = 0;
-            passengerName = ""; // Initial assignment
+            passengerName = ""; // // Initialize the passenger name
+            // Search for the passenger's booking by name
             for (int i = 0;i < BookingCounter; i++)
             {
                 if (PassengerName_A[i] == passengerName)
                 {
-                    index = i;
+                    index = i; //Store the index of the passenger booking 
                 }
             }
+            // Ask user to confirm the cancellation
             bool res = ConfirmAction("Cancel Flight Booking");
-            if (res)
+            if (res) 
             {
-                
+                // Shift all elements after the cancelled booking one position to the left
                 for (int i = index; i < BookingCounter; i++)
                 {
                     
@@ -217,6 +218,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                     BookingFlightCode_A[i] = BookingFlightCode_A[i + 1];
                     SeatReserved_A[i] = SeatReserved_A[i + 1];
                 }
+                // Decrease the total booking count by one
                 BookingCounter--;
                 Console.WriteLine("Cancel successfully");
             }
@@ -227,25 +229,17 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         }
 
         //                    ========================= Passenger Booking Functions =============================
-        //9. Book Flight +  Generate Booking ID
+        //9. Book Flight +  Generate Booking ID + CalculateFare
         public static void BookFlight(string passengerName, string flightCode = "Default001")
         { 
-//<<<<<<< HEAD
-//        { 
-//            PassengerName_A[count_seat] = passengerName;
-//            BookingFlightCode_A[count_seat] = flightCode;
-//            PassengerGenerateBookingID_A[count_seat] = GenerateBookingID(passengerName);
 
-//=======
-//        {
             int index = 0;
-            string bookingID = GenerateBookingID(passengerName);
-            PassengerName_A[BookingCounter] = passengerName;
-            BookingFlightCode_A[BookingCounter] = flightCode;
-            GenerateBookingID_A[BookingCounter] = bookingID;
+            string price = "";
+            string TotalPrice = "";
+
+            
             Console.WriteLine("How many tickets do you want");
             int tickets = int.Parse(Console.ReadLine());
-//>>>>>>> 6517a507f108c8373baeb9bdd72a23b3e935be96
 
             for (int i = 0; i < FlightCounter; i++)
             {
@@ -272,12 +266,66 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
 
             if (isValid)
             {
-                SeatsNum_A[index] = SeatsNum_A[index] - SeatReserved_A[index];
-                PassengerName_A[index] = passengerName;
-                BookingFlightCode_A[index] = flightCode;
-                GenerateBookingID_A[index] = bookingID;
+                string bookingID = GenerateBookingID(passengerName);
+                PassengerName_A[BookingCounter] = passengerName;
+                BookingFlightCode_A[BookingCounter] = flightCode;
+                GenerateBookingID_A[BookingCounter] = bookingID;
+                booking_tickets[BookingCounter] = tickets;
 
+
+                for (int i=0; i< FlightCounter; i++)
+                {
+                    if (flightCode_A[i] == flightCode)
+                    {
+                        price = Ticket_Price_A[i];
+                    }
+                         
+                }
+                
+
+                Console.Write("Do you want to add a discount? (yes/no): ");
+                string addDiscount = Console.ReadLine().ToLower();
+
+                if (addDiscount == "yes")
+                {
+                    int discount = 3;
+
+                    int basePriceint= int.Parse(price);
+                    double total = CalculateFare(basePriceint, booking_tickets[BookingCounter], discount);
+                    TotalPrice = total.ToString();
+
+
+                }
+                else
+                {
+                    // Try parsing as double first to check if base price is decimal
+                    if (price.Contains("."))
+                    {
+                        double basePriceDouble = double.Parse(price);
+                        double total = CalculateFare(basePriceDouble, booking_tickets[BookingCounter]);
+                        TotalPrice = total.ToString();
+
+                    }
+                    else
+                    {
+                        int basePriceInt = int.Parse(price);
+                        int total = CalculateFare(basePriceInt, booking_tickets[BookingCounter]);
+                        TotalPrice = total.ToString();
+
+
+                    }
+                }
                 Console.WriteLine("Booking Successfully");
+                Console.WriteLine("===========================================")
+                Console.WriteLine("Detail of Your Booking :");
+                Console.WriteLine();
+                Console.WriteLine($"passenger Name : {PassengerName_A[BookingCounter]}");
+                Console.WriteLine($"Code of flight You booking : {BookingFlightCode_A[BookingCounter]}");
+                Console.WriteLine($"Number of tickets : {booking_tickets[BookingCounter]}");
+                Console.WriteLine($" Total Price: {TotalPrice}");
+
+
+                
 
             }
             else
@@ -1239,66 +1287,14 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                         break;
                     //  Search Bookings By Destination
                     case 8:
-//<<<<<<< HEAD
-//                        Console.WriteLine("Enter the flight code: ");
-//                        string code_Diplay = Console.ReadLine();
-//                        DisplayFlightDetails(code_Diplay);
-//                        Console.WriteLine("\nPress any key to return to the menu...");
-//                        Console.ReadKey();
 
-//=======
-//                        Console.WriteLine("Enter the To City name:");
+                        Console.WriteLine("Enter the To City name:");
                         string ToCityInput = Console.ReadLine();
                         SearchBookingsByDestination(ToCityInput);
                         Console.WriteLine("\nPress any key to return to the menu...");
                         Console.ReadKey();
-//>>>>>>> 6517a507f108c8373baeb9bdd72a23b3e935be96
                         break;
                     //  Function Overloading
-                    case 9:
-                        Console.Write("Enter base price: ");
-                        string baseInput = Console.ReadLine();
-
-                        Console.Write("Enter number of tickets: ");
-                        int numTickets = int.Parse(Console.ReadLine());
-
-                        Console.Write("Do you want to add a discount? (yes/no): ");
-                        string addDiscount = Console.ReadLine().ToLower();
-
-                        if (addDiscount == "yes")
-                        {
-                            Console.Write("Enter discount percentage: ");
-                            int discount = int.Parse(Console.ReadLine());
-
-                            // Assume base price is integer
-                            int basePriceInt = int.Parse(baseInput);
-                            double total = CalculateFare(basePriceInt, numTickets, discount);
-                            Console.WriteLine($"Total Fare with discount: {total}");
-                            Console.ReadLine();
-                        }
-                        else
-                        {
-                            // Try parsing as double first to check if base price is decimal
-                            if (baseInput.Contains("."))
-                            {
-                                double basePriceDouble = double.Parse(baseInput);
-                                double total = CalculateFare(basePriceDouble, numTickets);
-                                Console.WriteLine($"Total Fare: {total}");
-                                Console.ReadLine();
-
-                            }
-                            else
-                            {
-                                int basePriceInt = int.Parse(baseInput);
-                                int total = CalculateFare(basePriceInt, numTickets);
-                                Console.WriteLine($"Total Fare: {total}");
-                                Console.ReadLine();
-
-                            }
-                        }
-
-
-                        break;
                     case 0:
                         //calling ExitApplication() function
                         ExitApplication();
