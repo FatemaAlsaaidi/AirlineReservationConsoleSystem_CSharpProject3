@@ -2,6 +2,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Diagnostics.Metrics;
 using System;
 using System.Reflection;
+using System.Net.Sockets;
 
 namespace AirlineReservationConsoleSystem_CSharpProject3
 {
@@ -24,19 +25,13 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         static bool ISFound = true;
 
         // variables and arraies Passenger Booking Functions section
-//<<<<<<< HEAD
-//        static int BookingCounter = 100;
-//        static string[] PassengerName_A = new string[BookingCounter];
-//        static string[] BookingFlightCode_A = new string[BookingCounter];
-//        static int count_seat = 0;
-//        static string[] PassengerGenerateBookingID_A = new string[BookingCounter];
-//=======
+
         static int BookingCounter = 0;
         static string[] PassengerName_A = new string[100];
         static string[] BookingFlightCode_A = new string[100];
         static string[] GenerateBookingID_A = new string[100];
         static int tickets = 0;
-//>>>>>>> 6517a507f108c8373baeb9bdd72a23b3e935be96
+        static double[] Ticket_Price_A=new double[Max_Flight];
 
         //                                =====================Startup & Navigation=============
 
@@ -91,7 +86,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
             Console.WriteLine("Thanks! Have Happy Day!");
         }
         // 4. Add Flight information method
-        public static void AddFlight(string flightCode, string fromCity, string toCity, DateTime departureTime, int duration, int SeatsNum)
+        public static void AddFlight(string flightCode, string fromCity, string toCity, DateTime departureTime, int duration, int SeatsNum, double TicketPrice)
         {
             // If all validations pass, save the data
             flightCode_A[FlightCounter] = flightCode;
@@ -100,6 +95,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
             departureTime_A[FlightCounter] = departureTime;
             duration_A[FlightCounter] = duration;
             SeatsNum_A[FlightCounter] = SeatsNum;
+            Ticket_Price_A[FlightCounter] = TicketPrice;
 
         }
         //                    ==========================Flight and Passenger Management (5–8) ==================
@@ -492,10 +488,10 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                 string flight_Code = null;
                 string from_City = null;
                 string to_City = null;
-                int Fly_Price=0;
-                DateTime departure_Time;
+                DateTime departure_Time = DateTime.MinValue;
                 int duration_1 = 0;
                 int Seats_Num = 0;
+                double Ticket_Price = 0;
                 char ChoiceChar = 'y';
                 bool AddMore = true;
                 int traies = 0;
@@ -513,170 +509,304 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                             Console.WriteLine($"Enter flight {FlightCounter + 1} Information");
                             // Flight Code Input..
                             // use do while loop to excute the quations of input data for first time befor check the input data if it is valide or no .
-                            do
+                            try
                             {
-                                // ask user to input Flight Code data and store this data in flight_Code variable 
-                                Console.WriteLine("Enter Flight Code :");
-                                flight_Code = Console.ReadLine();
+                                do
+                                {
+                                    //Ask user to enter the flight code
+                                    Console.WriteLine("Enter Flight Code :");
+                                    flight_Code = Console.ReadLine();
 
-                                // flightCode input validation 
-                                // check if the input flight code is not null and display the message to the user to enter the valid valis code input
-                                if (string.IsNullOrWhiteSpace(flight_Code))
-                                {
-                                    Console.WriteLine("Flight code cannot be empty.");
-                                    isValid = false;
-                                    traies++;
-                                }
-                                else
-                                {
-                                    isValid = true;
-                                    traies = 0;
-                                }
-
-                                // (Optional) Check if flight code already exists
-                                for (int i = 0; i < FlightCounter; i++)
-                                {
-                                    if (flightCode_A[i] == flight_Code)
+                                    // validate the flight code input
+                                    if (string.IsNullOrWhiteSpace(flight_Code))
                                     {
-                                        Console.WriteLine("A flight with this code already exists.");
+                                        Console.WriteLine("Flight code cannot be empty.");
                                         isValid = false;
                                         traies++;
+                                        continue; // try agine
+                                    }
 
+                                    // validate if th code exist or not
+                                    bool codeExists = false;
+                                    for (int i = 0; i < FlightCounter; i++)
+                                    {
+                                        if (flightCode_A[i] == flight_Code)
+                                        {
+                                            Console.WriteLine("A flight with this code already exists. Try again.");
+                                            codeExists = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (codeExists)
+                                    {
+                                        isValid = false;
+                                        traies++;
                                     }
                                     else
                                     {
                                         isValid = true;
-                                        traies = 0;
                                     }
 
                                 }
+                                while (!isValid && traies < 3); // كرر طالما الإدخال غير صحيح ولم تتجاوز المحاولات
 
-                                if (traies > 3)
+                                if (!isValid)
                                 {
                                     Console.WriteLine("Failed to provide a valid flight code after 3 tries.");
                                     return;
                                 }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                            }
 
-                            } while (!isValid && traies <= 3); // if the input is not vlidate repet ask the user 
 
-                            
+                            traies = 0;
 
                             // From City Input
                             // use do while loop to excute the quations of input data for first time befor check the input data if it is valide or no .
-                            do
+                            try
                             {
-                                //Ask user to input the from city data and temprorly store this data in from_city data
-                                Console.WriteLine("Enter From City :");
-                                from_City = Console.ReadLine();
-
-
-                                // fromCity input validation 
-                                if (string.IsNullOrWhiteSpace(from_City))
+                                do
                                 {
-                                    Console.WriteLine("From city names cannot be empty.");
-                                    isValid = false;
-                                }
-                                else
-                                {
-                                    isValid = true;
-                                }
-                            } while (!isValid); // if the input is not vlidate repet ask the user 
+                                    //Ask user to input the from city data and temprorly store this data in from_city data
+                                    Console.WriteLine("Enter From City :");
+                                    from_City = Console.ReadLine();
 
-                            // To City Input
-                            // use do while loop to excute the quations of input data for first time befor check the input data if it is valide or no .
-                            do
-                            {
-                                Console.WriteLine("Enter To City :");
-                                to_City = Console.ReadLine();
 
-                                // fromCity input validation 
-                                if (string.IsNullOrWhiteSpace(to_City))
-                                {
-                                    Console.WriteLine("Trom city names cannot be empty.");
-                                    isValid = false;
-                                }
-                                else
-                                {
-                                    isValid = true;
-                                }
-
-                            } while (!isValid); // if the input is not vlidate repet ask the user 
-
-                            // Departure time input
-                            // use do while loop to excute the quations of input data for first time befor check the input data if it is valide or no .
-                            do
-                            {
-                                Console.WriteLine("Enter the departure time (e.g., 2025-04-12 14:30):");
-                                string input = Console.ReadLine();
-
-                                if (DateTime.TryParse(input, out departure_Time))
-                                {
-                                    isValid = true;
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Invalid format! Please enter a valid date and time.");
-                                    isValid = false;
-                                }
-
-                            } while (!isValid); // if the input is not vlidate repet ask the user 
-
-                            // Duration Input
-                            // use do while loop to excute the quations of input data for first time befor check the input data if it is valide or no .
-                            do
-                            {
-                                Console.WriteLine("Enter duration:");
-                                string DurationInput = Console.ReadLine();
-
-                                // Duration input validation 
-                                if (int.TryParse(DurationInput, out duration_1))
-                                {
-                                    if (duration_1 <= 0)
+                                    // fromCity input validation 
+                                    if (string.IsNullOrWhiteSpace(from_City))
                                     {
-                                        Console.WriteLine("Duration must be greater than zero.");
+                                        Console.WriteLine("From city names cannot be empty.");
                                         isValid = false;
+                                        traies++;
+                                        continue;
                                     }
                                     else
                                     {
                                         isValid = true;
                                     }
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Invalid input. Please enter a valid number.");
-                                    isValid = false;
-                                }
-                            } while (!isValid); // if the input is not vlidate repet ask the user 
+                                } while (!isValid && traies < 3); // if the input is not vlidate repet ask the user 
 
+                                if (!isValid) // after traies 3 time and still the input is not validate
+                                {
+                                    Console.WriteLine("Failed to provide a valid From city after 3 tries.");
+                                    return;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                                isValid = false;
+                                traies++;
+                            }
+                            // ressigne the traies variavle as 0
+                            traies = 0;
+                            // To City Input
+                            // use do while loop to excute the quations of input data for first time befor check the input data if it is valide or no .
+                            try
+                            {
+                                do
+                                {
+                                    Console.WriteLine("Enter To City :");
+                                    to_City = Console.ReadLine();
+
+                                    // fromCity input validation 
+                                    if (string.IsNullOrWhiteSpace(to_City))
+                                    {
+                                        Console.WriteLine("to city names cannot be empty.try agind");
+                                        isValid = false;
+                                        traies++;
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        isValid = true;
+                                    }
+
+                                } while (!isValid && traies < 3); // if the input is not vlidate repet ask the user
+                                if (!isValid)
+                                {
+                                    Console.WriteLine("Failed to provide a valid to city after 3 tries.");
+                                    return;
+                                }
+                            }
+                            catch(Exception e)
+                            {
+                                Console.WriteLine($"An unexpected error occurred: {e.Message}");
+                                isValid = false;
+                                traies++;
+                            }
+
+                            traies = 0;
+                            // Departure time input
+                            // use do while loop to excute the quations of input data for first time befor check the input data if it is valide or no .
+                            try
+                            {
+                                do
+                                {
+                                    Console.WriteLine("Enter the departure time (e.g., 2025-04-12 14:30):");
+                                    string input = Console.ReadLine();
+
+                                    if (DateTime.TryParse(input, out departure_Time))
+                                    {
+                                        isValid = true;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Invalid format! Please enter a valid date and time. try agine");
+                                        isValid = false;
+                                        traies++;
+                                        continue;
+                                    }
+                                   
+
+                                } while (!isValid && traies < 3); // if the input is not vlidate repet ask the user 
+                                if (!isValid)
+                                {
+                                    Console.WriteLine("Failed to provide a valid date and time after 3 tries.");
+                                    return;
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine($"An unexpected error occurred: {e.Message}");
+                                isValid = false;
+                                traies++;
+                            }
+
+                            traies = 0;
+                            // Duration Input
+                            // use do while loop to excute the quations of input data for first time befor check the input data if it is valide or no .
+                            try
+                            {
+
+                                do
+                                {
+                                    Console.WriteLine("Enter duration:");
+                                    string DurationInput = Console.ReadLine();
+
+                                    // Duration input validation 
+                                    if (int.TryParse(DurationInput, out duration_1))
+                                    {
+                                        if (duration_1 <= 0)
+                                        {
+                                            Console.WriteLine("Duration must be greater than zero. tray agine");
+                                            isValid = false;
+                                            traies++;
+                                            continue ;
+                                        }
+                                        else
+                                        {
+                                            isValid = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Invalid input. Please enter a duration valid number. tray agine");
+                                        isValid = false;
+                                        traies++;
+                                    }
+                                  
+                                } while (!isValid && traies < 3); // if the input is not vlidate repet ask the user 
+                                if (!isValid)
+                                {
+                                    Console.WriteLine("Failed to provide a duration valid number after 3 tries.");
+                                    return;
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine($"An unexpected error occurred: {e.Message}");
+                                isValid = false;
+                                traies++;
+                            }
+                            traies = 0;
 
                             // Number of seats input
                             // use do while loop to excute the quations of input data for first time befor check the input data if it is valide or no .
-                            do
+                            try
                             {
-                                Console.WriteLine("Enter the Number of seats:");
-                                Seats_Num = int.Parse(Console.ReadLine());
-                                //seatsNum input validation
-                                if (Seats_Num <= 0)
-                                {
-                                    Console.WriteLine("Number of seats must be greater than zero.");
-                                    isValid = false;
-                                }
-                                else
-                                {
-                                    isValid = true;
-                                }
 
-                            } while (!isValid); // if the input is not vlidate repet ask the user 
+                                do
+                                {
+                                    Console.WriteLine("Enter the Number of seats:");
+                                    Seats_Num = int.Parse(Console.ReadLine());
+                                    //seatsNum input validation
+                                    if (Seats_Num <= 0)
+                                    {
+                                        Console.WriteLine("Number of seats must be greater than zero. tray agine");
+                                        isValid = false;
+                                        traies++;
+                                    }
+                                    else
+                                    {
+                                        isValid = true;
+                                    }
+                                    
 
-                            
+                                } while (!isValid && traies < 3); // if the input is not vlidate repet ask the user 
+                                if (!isValid)
+                                {
+                                    Console.WriteLine("Failed to provide a valid number of seat after 3 tries.");
+                                    return;
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine($"An unexpected error occurred: {e.Message}");
+                                isValid = false;
+                                traies++;
+                            }
+                            traies = 0;
+                            // input of ticket price
+                            try
+                            {
+                                do
+                                {
+                                    try
+                                    {
+                                        Console.WriteLine("Enter the ticket price: ");
+                                        Ticket_Price = double.Parse(Console.ReadLine());
+
+                                        if (Ticket_Price > 0)
+                                        {
+                                            isValid = true;
+                                        }
+
+
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Console.WriteLine("there is unexpected error ");
+                                        isValid = false;
+                                        traies++;
+
+                                    }
+                                    
+                                } while (!isValid && traies < 3); // if the input is not vlidate repet ask the user
+                                if (!isValid)
+                                {
+                                    Console.WriteLine("Failed to provide a valid number of seat after 3 tries.");
+                                    return;
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine($"An unexpected error occurred: {e.Message}");
+                                isValid = false;
+                                traies++;
+                            }
 
                             // check is all inputs data is valid or not 
                             if (isValid)
                             {
                                 // store all inputs data in the array 
-                                AddFlight(flightCode: flight_Code, fromCity: from_City, toCity: to_City, departureTime: departure_Time, duration: duration_1, SeatsNum: Seats_Num);
-                                Console.WriteLine("\nPress any key to return to the menu...");
-                                Console.ReadKey();
+                                AddFlight(flightCode: flight_Code, fromCity: from_City, toCity: to_City, departureTime: departure_Time, duration: duration_1, SeatsNum: Seats_Num, TicketPrice: Ticket_Price);
+                                //Console.ReadKey();
                                 Console.WriteLine("Flight added successfully!");
                                 FlightCounter++;
                             }
