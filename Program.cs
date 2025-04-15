@@ -56,10 +56,9 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                 Console.WriteLine("4. Update Flight Departure");
                 Console.WriteLine("5. Cancel Flight Booking");
                 Console.WriteLine("6. Book Flight");
-                Console.WriteLine("7. Validate Flight Code");
-                Console.WriteLine("8. Display Flight Details");
-                Console.WriteLine("9.Search Bookings By Destination");
-                Console.WriteLine("10. Calculate Fare");
+                Console.WriteLine("7. Display Flight Details");
+                Console.WriteLine("8.Search Bookings By Destination");
+                Console.WriteLine("9. Calculate Fare");
                 Console.WriteLine("0. Exit");
                 Console.WriteLine("Enter the option: ");
                 string input = Console.ReadLine();
@@ -496,6 +495,11 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                 bool AddMore = true;
                 int traies = 0;
 
+                // case 3
+                string code3 = "";
+                bool findanother = true;
+                // case 4
+                
                 // Declare variables to store singe value of user input in case 6
 
                 bool BookingMore = true;
@@ -850,20 +854,159 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                         break;
                     //Find Flight By Code
                     case 3:
-                        Console.WriteLine("Enter the code of Flight : ");
-                        string code = Console.ReadLine();
-                        FindFlightByCode(code);
-                        Console.WriteLine("\nPress any key to return to the menu...");
-                        Console.ReadKey();
+                        while (findanother)
+                        {
+                            try
+                            {
+                                do
+                                {
+                                    //Ask user to enter the flight code
+                                    Console.WriteLine("Enter Flight Code :");
+                                    code3 = Console.ReadLine();
+
+                                    // validate the flight code input
+                                    if (string.IsNullOrWhiteSpace(code3))
+                                    {
+                                        Console.WriteLine("Flight code cannot be empty.");
+                                        isValid = false;
+                                        traies++;
+                                        continue; // try agine
+                                    }
+
+                                    // validate if th code exist or not
+                                    bool codeExists = false;
+                                    for (int i = 0; i < FlightCounter; i++)
+                                    {
+                                        // if staement to compare the values
+                                        if (flightCode_A[i] == code3)
+                                        {
+                                            codeExists = true;
+                                            break;
+                                        }
+                                    }
+                                    // take action if CodeExist variable has true value
+                                    if (codeExists)
+                                    {
+                                        isValid = true; // put is valid as true if the value of codeExist is also true 
+
+                                    }
+                                    else
+                                    {
+                                        isValid = false;
+                                        traies++;
+
+                                    }
+
+                                }
+                                while (!isValid && traies < 3);
+                                // exist if Failed to provide a valid flight code after 3 tries.
+                                if (!isValid)
+                                {
+                                    Console.WriteLine("Failed to provide a valid flight code after 3 tries.");
+                                    return;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                                traies++;
+                            }
+                            // if isValid falg is true that mean we can use code varible as input in FindFlightByCode function
+                            if (isValid)
+                            {
+                                FindFlightByCode(code3); // call findFlightFunction()
+                                Console.WriteLine("\nPress any key to return to the menu...");
+                                Console.ReadKey();
+                            }
+                            else
+                            {
+                                Console.WriteLine("code dose not exist");
+                                continue;
+                            }
+                            
+                           
+                            //ask user if want to find onthor flight information '
+                            Console.WriteLine("Do you want to anthor flight information (y/n)");
+                            ChoiceChar = Console.ReadKey().KeyChar;
+                            Console.WriteLine();
+                            // use if statement to deal with ChoiceChar input if y or n
+                            if (ChoiceChar == 'Y' || ChoiceChar == 'y')
+                            {
+                                findanother = true;
+                            }
+                            else
+                            {
+                                findanother = false; // display another as false 
+                            }
+
+                           
+                            Console.ReadLine();
+                        }
                         break;
                     //Update Flight Departure
                     case 4:
-                        Console.WriteLine($" Update Flight Departure of Flight : ");
-                        DateTime departure = DateTime.Parse(Console.ReadLine());
-                        UpdateFlightDeparture(ref departure);
-                        Console.WriteLine("\nPress any key to return to the menu...");
-                        Console.ReadKey();
+                        bool UpdateMore = true;
+                        while (UpdateMore)
+                        {
+                            try
+                            {
+                                do
+                                {
+                                    Console.WriteLine("Enter the update departure time (e.g., 2025-04-12 14:30):");
 
+                                    string input = Console.ReadLine();
+
+                                    if (DateTime.TryParse(input, out departure_Time))
+                                    {
+                                        isValid = true;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Invalid format! Please enter a valid date and time. try agine");
+                                        isValid = false;
+                                        traies++;
+                                        continue;
+                                    }
+
+
+                                } while (!isValid && traies < 3); // if the input is not vlidate repet ask the user 
+                                if (!isValid)
+                                {
+                                    Console.WriteLine("Failed to provide a valid date and time after 3 tries.");
+                                    return;
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine($"An unexpected error occurred: {e.Message}");
+                                isValid = false;
+                                traies++;
+                            }
+
+                            traies = 0;
+
+                            if (isValid)
+                            {
+                                UpdateFlightDeparture(ref departure_Time);
+                                Console.WriteLine("\nPress any key to return to the menu...");
+                                Console.ReadKey();
+                            }
+
+                            //ask user if want to find onthor flight information '
+                            Console.WriteLine("Do you want to Update  another flight departure (y/n)");
+                            ChoiceChar = Console.ReadKey().KeyChar;
+                            Console.WriteLine();
+                            // use if statement to deal with ChoiceChar input if y or n
+                            if (ChoiceChar == 'Y' || ChoiceChar == 'y')
+                            {
+                                UpdateMore = true;
+                            }
+                            else
+                            {
+                                UpdateMore = false; // display another as false 
+                            }
+                            Console.ReadLine();
+                        }
                         break;
                     // CancelFlightBooking
                     case 5:
@@ -872,7 +1015,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                         CancelFlightBooking(out passengerName_Input0);
                         Console.ReadLine() ;
                         break;
-                    // Book Flight +  GenerateBookingID
+                    // BookFlight +  GenerateBookingID +// ValidateFlightCode functions
                     case 6:
                         while (BookingMore)
                         {
@@ -882,31 +1025,24 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
 
                             Console.WriteLine("Enter Flight Code: ");
                             string flightCode_Input = Console.ReadLine();
-                            for (int i = 0; i < FlightCounter; i++)
-                            {
-                                if (flightCode_A[i] == flightCode_Input)
-                                {
-                                    FlightIndex = i;
-                                    break;
-                                }
-                            }
+                            bool VlidateFlight = ValidateFlightCode(flightCode_Input);
 
-                            if (flightCode_A[FlightIndex] == flightCode_Input)
+                            if (VlidateFlight) // if statement to make sure the enter code is exist in the flight code list
                             {
-                                if (BookingCounter < SeatsNum_A[FlightIndex])
+                                if (BookingCounter < SeatsNum_A[FlightIndex]) // check if number of booking is less than number of seats, if yes so there is seat to booking
                                 {
                                     BookFlight(passengerName: passengerName_Input, flightCode: flightCode_Input);
                                     Console.WriteLine("Flight booking successfully!");
                                     BookingCounter++;
 
                                 }
-                                else
+                                else // if the condition is false so there is not seat to booking
                                 {
                                     Console.WriteLine("No available seats on this flight.");
                                     BookingMore = false;
                                 }
                             }
-                            else
+                            else // in case the code dose not exist
                             {
                                 Console.WriteLine("Flight code can not found it");
                                 BookingMore = false;
@@ -942,16 +1078,9 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                             Console.ReadLine();
                         } 
 
-                        break;
-                    // Validate Flight Code
-                    case 7:
-                        Console.WriteLine("Enter the flight code :");
-                        string flightCodeInput = Console.ReadLine();
-                        ValidateFlightCode(flightCodeInput);
-                        Console.ReadKey();
-                        break;
+                        break;                  
                     // DisplayFlightDetails
-                    case 8:
+                    case 7:
                         Console.WriteLine("Enter the the flight code: ");
                         string flightCode = Console.ReadLine();
                         DisplayFlightDetails(flightCode);
@@ -961,7 +1090,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
 
                         break;
                     //  Search Bookings By Destination
-                    case 9:
+                    case 8:
 //<<<<<<< HEAD
 //                        Console.WriteLine("Enter the flight code: ");
 //                        string code_Diplay = Console.ReadLine();
@@ -978,7 +1107,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
 //>>>>>>> 6517a507f108c8373baeb9bdd72a23b3e935be96
                         break;
                     //  Function Overloading
-                    case 10:
+                    case 9:
                         Console.Write("Enter base price: ");
                         string baseInput = Console.ReadLine();
 
@@ -1022,14 +1151,11 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
 
 
                         break;
-
                     case 0:
                         //calling ExitApplication() function
                         ExitApplication();
                         //using return to stop the whole method thus, stop whole program 
                         return;
-
-
                     default:
                         // // Display an message for invalid user input 
                         Console.WriteLine("Invalid choice! Try again.");
