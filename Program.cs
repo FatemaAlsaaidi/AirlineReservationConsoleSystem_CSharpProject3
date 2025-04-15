@@ -3,6 +3,8 @@ using System.Diagnostics.Metrics;
 using System;
 using System.Reflection;
 using System.Net.Sockets;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace AirlineReservationConsoleSystem_CSharpProject3
 {
@@ -17,6 +19,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         static int[] duration_A = new int[Max_Flight];
         static int[] SeatsNum_A = new int[Max_Flight];
         static int[] SeatReserved_A = new int[Max_Flight];
+        static double[] Ticket_Price_A = new double[Max_Flight];
         static int[] price_A = new int[Max_Flight];
 
         // flag to validate the user input 
@@ -31,7 +34,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
         static string[] BookingFlightCode_A = new string[100];
         static string[] GenerateBookingID_A = new string[100];
         static int tickets = 0;
-        static double[] Ticket_Price_A=new double[Max_Flight];
+        
 
         //                                =====================Startup & Navigation=============
 
@@ -190,7 +193,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
 
             return departureTime_A[index] = departure;
         }
-        // 8. CancelFlightBooking(out string passengerName) 
+        // 8. CancelFlightBooking(out string passengerName)  + ConfirmAction("string");
         public static void CancelFlightBooking(out string passengerName)
         {
             int index = 0;
@@ -211,6 +214,8 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                     
                     PassengerName_A[i] = PassengerName_A[i + 1];
                     GenerateBookingID_A[i] = GenerateBookingID_A[i + 1];
+                    BookingFlightCode_A[i] = BookingFlightCode_A[i + 1];
+                    SeatReserved_A[i] = SeatReserved_A[i + 1];
                 }
                 BookingCounter--;
                 Console.WriteLine("Cancel successfully");
@@ -503,6 +508,8 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                 // Declare variables to store singe value of user input in case 6
 
                 bool BookingMore = true;
+                string passengerName_Input = null; //declare passengername variable 
+                string flightCode_Input = null;
 
                 switch (option)
                 {
@@ -553,7 +560,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                                     }
 
                                 }
-                                while (!isValid && traies < 3); // كرر طالما الإدخال غير صحيح ولم تتجاوز المحاولات
+                                while (!isValid && traies < 3); // iteration while isvalid is true and tries ia less than 3
 
                                 if (!isValid)
                                 {
@@ -1010,24 +1017,165 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                         break;
                     // CancelFlightBooking
                     case 5:
-                        Console.WriteLine("Enter passenger Name: ");
-                        string passengerName_Input0 = Console.ReadLine();
-                        CancelFlightBooking(out passengerName_Input0);
-                        Console.ReadLine() ;
+
+                        // Enter Passenger name from user 
+                        try
+                        {
+                            do
+                            {
+                                Console.WriteLine("Enter passenger Name :");
+                                passengerName_Input = Console.ReadLine();
+                                //Check if the name contains special characters , use .IsMatch to Indicates whether the specified regular expression finds a match in the specified input string
+                                if (!Regex.IsMatch(passengerName_Input, @"^[a-zA-Z\s]+$"))
+                                {
+                                    Console.WriteLine("Invalid name! Special characters and numbers are not allowed.");
+                                    isValid = false;
+                                    traies++;
+                                    continue;
+                                }
+                                else
+                                {
+                                    isValid = true;
+                                }
+
+                                // If the name is empty or just spaces, also throw an error, use function to check whether the specified string is null or contains only white-space characters
+                                if (string.IsNullOrWhiteSpace(passengerName_Input))
+                                {
+                                    Console.WriteLine("Name cannot be empty or spaces only.");
+                                    isValid = false;
+                                    traies++;
+                                }
+
+                                else
+                                {
+                                    isValid = true; //Set to false once valid input is entered , exit loop
+                                }
+
+                            } while (!isValid && traies < 3);
+                            if (!isValid)
+                            {
+                                Console.WriteLine("Failed to provide a valid date and time after 3 tries.");
+                                return;
+                            }
+
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"Error: {e.Message}");
+                            Console.WriteLine("Press enter to continue...");
+                        }
+
+                        traies = 0;
+                        if (isValid)
+                        {
+                            CancelFlightBooking(out passengerName_Input);
+                            Console.ReadLine();
+                        }
+                        
                         break;
                     // BookFlight +  GenerateBookingID +// ValidateFlightCode functions
                     case 6:
                         while (BookingMore)
                         {
                             int FlightIndex = 0;
-                            Console.WriteLine("Enter passenger Name :");
-                            string passengerName_Input = Console.ReadLine();
+                            // Enter Passenger name from user 
+                            try
+                            {
+                                do
+                                {
+                                    Console.WriteLine("Enter passenger Name :");
+                                    passengerName_Input = Console.ReadLine();
+                                    //Check if the name contains special characters , use .IsMatch to Indicates whether the specified regular expression finds a match in the specified input string
+                                    if (!Regex.IsMatch(passengerName_Input, @"^[a-zA-Z\s]+$"))
+                                    {
+                                        Console.WriteLine("Invalid name! Special characters and numbers are not allowed.");
+                                        isValid = false;
+                                        traies++;
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        isValid = true;
+                                    }
 
-                            Console.WriteLine("Enter Flight Code: ");
-                            string flightCode_Input = Console.ReadLine();
-                            bool VlidateFlight = ValidateFlightCode(flightCode_Input);
+                                    // If the name is empty or just spaces, also throw an error, use function to check whether the specified string is null or contains only white-space characters
+                                    if (string.IsNullOrWhiteSpace(passengerName_Input))
+                                    {
+                                        Console.WriteLine("Name cannot be empty or spaces only.");
+                                        isValid = false;
+                                        traies++;
+                                    }
 
-                            if (VlidateFlight) // if statement to make sure the enter code is exist in the flight code list
+                                    else
+                                    {
+                                        isValid = true; //Set to false once valid input is entered , exit loop
+                                    }
+
+                                } while (!isValid && traies < 3);
+                                if (!isValid)
+                                {
+                                    Console.WriteLine("Failed to provide a valid date and time after 3 tries.");
+                                    return;
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine($"Error: {e.Message}");
+                                Console.WriteLine("Press enter to continue...");
+                            }
+
+                            traies = 0;
+                            // enter the flight code he want to booking
+                            try
+                            {
+
+
+                                do
+                                {
+                                    Console.WriteLine("Enter Flight Code: ");
+                                    flightCode_Input = Console.ReadLine();
+                                    // validate the flight code input
+                                    if (string.IsNullOrWhiteSpace(flight_Code))
+                                    {
+                                        Console.WriteLine("Flight code cannot be empty.");
+                                        isValid = false;
+                                        traies++;
+                                        continue; // try agine
+                                    }
+                                    else
+                                    {
+                                        isValid = true;
+                                    }
+
+                                    // validate if th code exist or not
+                                    bool VlidateFlight = ValidateFlightCode(flightCode_Input);
+                                    if (VlidateFlight)
+                                    {
+                                        isValid = true;
+                                    }
+                                    else
+                                    {
+                                        isValid = false;
+                                        traies++;
+                                    }
+
+
+                                } while (!isValid && traies < 3);
+                                if (!isValid)
+                                {
+                                    Console.WriteLine("Failed to provide a valid date and time after 3 tries.");
+                                    return;
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine($"Error: {e.Message}");
+                                Console.WriteLine("Press enter to continue...");
+                            }
+                            traies = 0;
+                            if (isValid) /// if statement to make sure the enter code is exist in the flight code list
                             {
                                 if (BookingCounter < SeatsNum_A[FlightIndex]) // check if number of booking is less than number of seats, if yes so there is seat to booking
                                 {
