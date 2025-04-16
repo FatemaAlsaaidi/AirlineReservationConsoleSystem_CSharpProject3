@@ -87,7 +87,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
             Console.WriteLine("Thanks! Have Happy Day!");
         }
         // 4. Add Flight information method
-        public static void AddFlight(string flightCode, string fromCity, string toCity, DateTime departureTime, int duration, int SeatsNum, double TicketPrice)
+        public static void AddFlight(string flightCode, string fromCity, string toCity, DateTime departureTime, int duration, int SeatsNum, string TicketPrice)
         {
             // If all validations pass, save the data
             flightCode_A[FlightCounter] = flightCode;
@@ -316,7 +316,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                     }
                 }
                 Console.WriteLine("Booking Successfully");
-                Console.WriteLine("===========================================")
+                Console.WriteLine("===========================================");
                 Console.WriteLine("Detail of Your Booking :");
                 Console.WriteLine();
                 Console.WriteLine($"passenger Name : {PassengerName_A[BookingCounter]}");
@@ -543,7 +543,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                 DateTime departure_Time = DateTime.MinValue;
                 int duration_1 = 0;
                 int Seats_Num = 0;
-                double Ticket_Price = 0;
+                string Ticket_Price = "";
                 char ChoiceChar = 'y';
                 bool AddMore = true;
                 int traies = 0;
@@ -829,9 +829,9 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                                     try
                                     {
                                         Console.WriteLine("Enter the ticket price: ");
-                                        Ticket_Price = double.Parse(Console.ReadLine());
+                                        Ticket_Price = Console.ReadLine();
 
-                                        if (Ticket_Price > 0)
+                                        if (Ticket_Price != "")
                                         {
                                             isValid = true;
                                         }
