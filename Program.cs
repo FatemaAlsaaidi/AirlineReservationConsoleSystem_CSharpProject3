@@ -220,6 +220,12 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                     Console.WriteLine($"Reserved Seats Number: {SeatReserved_List[i]} Seats"); // display how many number of seat are reserve in th flight
                     Console.WriteLine($"Remaining  Seats Number: {SeatsNum_List[i] - SeatReserved_List[i]} Seats"); // display how many of seats are remaine
                     Console.WriteLine("-------------------------------------------------------------------------");
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("This flight code isn't exist");
+                    return false;
                 }
             }
 
@@ -1766,7 +1772,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                                     }
 
                                     // validate if th code exist or not
-                                    bool codeExists = false;
+                                    bool codeExists = true;
                                     for (int i = 0; i < FlightCounter; i++)
                                     {
                                         // if staement to compare the values
@@ -1784,10 +1790,23 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                                     }
                                     else
                                     {
+                                        Console.WriteLine("Flight code does not exist.");
                                         isValid = false;
                                         traies++;
 
                                     }
+                                    // if isValid falg is true that mean we can use code varible as input in FindFlightByCode function
+                                    if (isValid)
+                                    {
+                                        FindFlightByCode_List(code3); // call findFlightFunction()
+                                        Console.WriteLine("\nPress any key to return to the menu...");
+                                        Console.ReadKey();
+                                    }
+                                    //else
+                                    //{
+                                    //    Console.WriteLine("code dose not exist");
+                                    //    continue;
+                                    //}
 
                                 }
                                 while (!isValid && traies < 3);
@@ -1803,18 +1822,7 @@ namespace AirlineReservationConsoleSystem_CSharpProject3
                                 Console.WriteLine($"An unexpected error occurred: {ex.Message}");
                                 traies++;
                             }
-                            // if isValid falg is true that mean we can use code varible as input in FindFlightByCode function
-                            if (isValid)
-                            {
-                                FindFlightByCode_List(code3); // call findFlightFunction()
-                                Console.WriteLine("\nPress any key to return to the menu...");
-                                Console.ReadKey();
-                            }
-                            else
-                            {
-                                Console.WriteLine("code dose not exist");
-                                continue;
-                            }
+                            
 
 
                             //ask user if want to find onthor flight information '
